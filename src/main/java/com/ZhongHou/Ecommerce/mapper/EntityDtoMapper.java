@@ -1,6 +1,8 @@
 package com.ZhongHou.Ecommerce.mapper;
 
+import com.ZhongHou.Ecommerce.dto.AddressDto;
 import com.ZhongHou.Ecommerce.dto.UserDto;
+import com.ZhongHou.Ecommerce.entity.Address;
 import com.ZhongHou.Ecommerce.entity.User;
 import org.springframework.stereotype.Component;
 
@@ -20,4 +22,11 @@ public class EntityDtoMapper {
     }
 
     //Address to DTO basic
+    public AddressDto mapAddressToDtoBasic(Address add){
+        AddressDto addressDto = new AddressDto();
+        addressDto.setId(add.getId());
+        addressDto.setCity(add.getCity());
+
+        return addressDto;
+    }
 }
