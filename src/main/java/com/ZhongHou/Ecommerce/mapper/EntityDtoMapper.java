@@ -4,6 +4,8 @@ import com.ZhongHou.Ecommerce.dto.*;
 import com.ZhongHou.Ecommerce.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 public class EntityDtoMapper {
 
@@ -84,7 +86,27 @@ public class EntityDtoMapper {
     }
 
     //OrderItem to Dto plus product adn user
+    public OrderItemDto mapOrderItemToDtoPlusProductAndUser(OrderItem orderItem){
+        OrderItemDto orderItemDto=mapOrderItemToDtoPlusProduct(orderItem);
 
+        if (orderItem.getUser() != null) {
+            UserDto userDto = mapUserToDtoPlusAddress(orderItem.getUser());
+            orderItemDto.setUser(userDto);
+        }
+        return orderItemDto;
+    }
+
+    //User to Dto with Address and Order Items History
+    public  UserDto mapUserToDtoPlusAddressAndOrderHistory(User user){
+        UserDto userDto=mapUserToDtoPlusAddress(user);
+
+        if (user.getOrderItemList() != null && !user.getOrderItemList().isEmpty()){
+            userDto.setOrderItemList(user.getOrderItemList().stream()
+                    .map(this::mapOrderItemToDtoPlusProduct)
+                    .collect(Collectors.toList()));
+        }
+        return userDto;
+    }
 
 
 
