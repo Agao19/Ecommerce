@@ -28,6 +28,10 @@ public class OrderItemSpecifications {
         }));
     }
 
+    public static Specification<OrderItem> hasItemId(Long itemId){
+        return ((root, query, criteriaBuilder) ->
+                itemId != null ? criteriaBuilder.equal(root.get("id"),itemId):null);
+    }
 
 
 }
