@@ -103,6 +103,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response getUserInfoAndOrderHistory() {
-        return null;
+        User user=getLoginUser();
+        UserDto userDto=entityDtoMapper.mapUserToDtoPlusAddressAndOrderHistory(user);
+
+        return Response.builder()
+                .status(200)
+                .message("Ok")
+                .user(userDto)
+                .build();
     }
 }
