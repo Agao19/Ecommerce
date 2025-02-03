@@ -3,6 +3,7 @@ package com.ZhongHou.Ecommerce.service;
 import com.ZhongHou.Ecommerce.dto.LoginRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
+import com.ZhongHou.Ecommerce.entity.User;
 
 public interface UserService {
     Response registerUser(UserDto registrationRequest);
@@ -11,7 +12,7 @@ public interface UserService {
 
     Response getAllUsers();
 
-    Response getLoginUser();
+    User getLoginUser();
 
     Response getUserInfoAndOrderHistory();
 
