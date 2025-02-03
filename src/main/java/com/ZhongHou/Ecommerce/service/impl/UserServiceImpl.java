@@ -5,6 +5,8 @@ import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.UserRole;
+import com.ZhongHou.Ecommerce.exception.InvalidCredentialsException;
+import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.UserRepository;
 import com.ZhongHou.Ecommerce.security.JwtUtils;
@@ -50,9 +52,25 @@ public class UserServiceImpl implements UserService {
                 .build();
     }
 
+
+
     @Override
     public Response loginUser(LoginRequest loginRequest) {
-        return null;
+
+        User user = userRepo.findByEmail(loginRequest.getEmail()).orElseThrow(()->new NotFoundException("Email not found"));
+        if (!passwordEncoder.matches(loginRequest.getPassword(),user.getPassword())){
+            throw new InvalidCredentialsException("Password does not match");
+        }
+
+        String token=jwtUtils.generateToken(user);
+
+        return Response.builder()
+                .status(200)
+                .message("User successfully")
+                .token(token)
+                .expirationTime("6 Month")
+                .role(user.getRole().name())
+                .build();
     }
 
     @Override
