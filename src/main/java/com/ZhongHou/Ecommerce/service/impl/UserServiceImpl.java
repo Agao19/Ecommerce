@@ -3,6 +3,8 @@ package com.ZhongHou.Ecommerce.service.impl;
 import com.ZhongHou.Ecommerce.dto.LoginRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
+import com.ZhongHou.Ecommerce.entity.User;
+import com.ZhongHou.Ecommerce.enums.UserRole;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.UserRepository;
 import com.ZhongHou.Ecommerce.security.JwtUtils;
@@ -24,7 +26,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Response registerUser(UserDto registrationRequest) {
-        return null;
+        UserRole role=UserRole.USER;
+
+        if (registrationRequest.getRole() != null && registrationRequest.getRole().equalsIgnoreCase("admin")){
+            role=UserRole.ADMIN;
+        }
+        User user = User.builder()
+                .name(registrationRequest.getName())
+                .email(registrationRequest.getEmail())
+                .password(passwordEncoder.encode(registrationRequest.getPassword()))
+                .password(registrationRequest.getPassword())
+                .role(role)
+                .build();
+
+        User savedUser=userRepo.save(user);
+
+        UserDto userDto = entityDtoMapper.mapUserToDtoBasic(savedUser);
+
+        return Response.builder()
+                .status(200)
+                .message("User Successfully")
+                .user(userDto)
+                .build();
     }
 
     @Override
