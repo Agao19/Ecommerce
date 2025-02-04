@@ -47,6 +47,29 @@ public class ProductServiceImpl implements ProductService {
     public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
         Product product=productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product Not found"));
 
+        Category category=null;
+        String productImageUrl=null;
+
+        if (category != null) {
+            category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category Not Found"));
+        }
+
+        if (image != null && !image.isEmpty()){
+            //productImageUrl=
+        }
+
+        if (category != null) product.setCategory(category);
+        if (name != null) product.setName(name);
+        if (price != null) product.setPrice(price);
+        if (description != null) product.setDescription(description);
+        if (productImageUrl != null) product.setImageUrl(productImageUrl);
+
+        productRepository.save(product);
+
+        return Response.builder()
+                .status(200)
+                .message("Product updated successfully")
+                .build();
     }
 
     @Override
