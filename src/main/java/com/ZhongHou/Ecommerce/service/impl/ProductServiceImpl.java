@@ -1,5 +1,6 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
+import com.ZhongHou.Ecommerce.dto.ProductDto;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.entity.Category;
 import com.ZhongHou.Ecommerce.entity.Product;
@@ -85,7 +86,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response getProductById(Long productId) {
-        return null;
+       Product product=productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product not found"));
+        ProductDto productDto=entityDtoMapper.mapProductToDtoBasic(product);
+
+        return  Response.builder()
+                .status(200)
+                .product(productDto)
+                .build();
     }
 
     @Override
