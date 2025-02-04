@@ -45,7 +45,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
-        Product product=productRepository.findBy()
+        Product product=productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product Not found"));
+
     }
 
     @Override
