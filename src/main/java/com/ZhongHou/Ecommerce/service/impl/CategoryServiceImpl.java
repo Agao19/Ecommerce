@@ -2,6 +2,9 @@ package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
 import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.entity.Category;
+import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
+import com.ZhongHou.Ecommerce.repository.CategoryRepository;
 import com.ZhongHou.Ecommerce.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,9 +14,22 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Slf4j
 public class CategoryServiceImpl implements CategoryService {
+
+    private final CategoryRepository categoryRepository;
+    private final EntityDtoMapper entityDtoMapper;
+c
+
+
     @Override
     public Response createCategory(CategoryDto categoryRequest) {
-        return null;
+        Category category=new Category();
+        category.setName(categoryRequest.getName());
+        categoryRepository.save(category);
+
+        return Response.builder()
+                .status(200)
+                .message("Category created successfully")
+                .build();
     }
 
     @Override
