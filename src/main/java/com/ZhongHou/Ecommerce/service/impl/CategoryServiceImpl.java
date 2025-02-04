@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -44,8 +47,16 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Response getAllCategories() {
-        return null;
+    public Response getAllCategories( ) {
+        List<Category> categories=categoryRepository.findAll();
+        List<CategoryDto> categoryDtoList=categories.stream()
+                .map(entityDtoMapper::mapCategoryToDtoBasic)
+                .collect(Collectors.toList());
+
+        return Response.builder()
+                .status(200)
+                .categoryList(categoryDtoList)
+                .build();
     }
 
     @Override
