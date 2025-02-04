@@ -129,6 +129,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response searchProduct(String searchValue) {
-        return null;
+        List<Product> products=productRepository.findByNameContainingOrDescriptionContaining(searchValue,searchValue);
+
+        if (products.isEmpty()){
+            throw new NotFoundException("No products found");
+        }
+            List<ProductDto> productDtoList= products.stream()
+                    .map(entityDtoMapper::mapProductToDtoBasic)
+                    .collect(Collectors.toList());
+
+            return Response.builder()
+                    .status(200)
+                    .productList(productDtoList)
+                    .build();
     }
 }
