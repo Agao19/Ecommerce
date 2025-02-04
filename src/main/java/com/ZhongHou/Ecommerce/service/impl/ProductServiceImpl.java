@@ -11,10 +11,13 @@ import com.ZhongHou.Ecommerce.repository.ProductRepository;
 import com.ZhongHou.Ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -97,7 +100,15 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response getAllProduct() {
-        return null;
+        List<ProductDto> productList  = productRepository.findAll(Sort.by(Sort.Direction.DESC,"id"))
+                .stream()
+                .map(entityDtoMapper::mapProductToDtoBasic)
+                .collect(Collectors.toList());
+
+        return  Response.builder()
+                .status(200)
+                .productList(productList)
+                .build();
     }
 
     @Override
