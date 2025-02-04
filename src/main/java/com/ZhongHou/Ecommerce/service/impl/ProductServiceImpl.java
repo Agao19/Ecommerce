@@ -74,7 +74,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response deleteProduct(Long productId) {
-        return null;
+        Product product = productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product Not Found"));
+        productRepository.delete(product);
+
+        return Response.builder()
+                .status(200)
+                .message("Product deleted successfully")
+                .build();
     }
 
     @Override
