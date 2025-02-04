@@ -13,6 +13,6 @@ public interface CategoryService {
 
     Response getCategoryById(Long categoryId);
 
-    Response deleteCategory(Long categoryRequest);
+    Response deleteCategory(Long categoryId);
 
 }
