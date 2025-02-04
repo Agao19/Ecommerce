@@ -3,6 +3,7 @@ package com.ZhongHou.Ecommerce.service.impl;
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.entity.Category;
+import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.CategoryRepository;
 import com.ZhongHou.Ecommerce.service.CategoryService;
@@ -17,7 +18,6 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final EntityDtoMapper entityDtoMapper;
-c
 
 
     @Override
@@ -34,7 +34,13 @@ c
 
     @Override
     public Response updateCategory(Long categoryId, CategoryDto categoryRequest) {
-        return null;
+        Category category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+        category.setName(categoryRequest.getName());
+        categoryRepository.save(category);
+        return Response.builder()
+                .status(200)
+                .message("Category updated successfully")
+                .build();
     }
 
     @Override
