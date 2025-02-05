@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.Region;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 @Slf4j
@@ -40,7 +42,14 @@ public class AwsS3Service {
                     .withRegion(Regions.US_EAST_2)
                     .build();
 
-                //get input stream from photo
+            //get input stream from photo
+            InputStream inputStream=photo.getInputStream();
+
+            //set metadata for the object
+            ObjectMetadata metadata=new ObjectMetadata();
+            metadata.setContentType("image/jpg");
+
+            //
         }catch (IOException e){
             e.printStackTrace();
             throw new RuntimeException("Unable to upload image to s3 bucket: "+ e.getMessage());
