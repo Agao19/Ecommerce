@@ -8,6 +8,7 @@ import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.CategoryRepository;
 import com.ZhongHou.Ecommerce.repository.ProductRepository;
+import com.ZhongHou.Ecommerce.service.AwsS3Service;
 import com.ZhongHou.Ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,17 +28,18 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final EntityDtoMapper entityDtoMapper;
+    private final AwsS3Service aws;
 
     @Override
     public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
         Category category= categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
-        //String productImageUrl=
+        String productImageUrl=aws.saveImageToS3(image);
 
         Product product = new Product();
         product.setCategory(category);
         product.setName(name);
         product.setDescription(description);
-        //product.setImageUrl(productImageUrl);
+        product.setImageUrl(productImageUrl);
 
         productRepository.save(product);
 
