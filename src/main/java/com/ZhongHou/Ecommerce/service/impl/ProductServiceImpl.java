@@ -61,7 +61,7 @@ public class ProductServiceImpl implements ProductService {
         }
 
         if (image != null && !image.isEmpty()){
-            //productImageUrl=
+            productImageUrl=aws.saveImageToS3(image);
         }
 
         if (category != null) product.setCategory(category);
