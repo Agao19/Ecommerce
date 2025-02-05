@@ -55,7 +55,11 @@ public class OrderItemServiceImpl implements OrderItemService {
                     return orderItem;
                 }).collect(Collectors.toList());
 
-        //calculate the
+        //calculate the total price
+        BigDecimal totalPrice= orderRequest.getTotalPrice() != null && orderRequest.getTotalPrice().compareTo(BigDecimal.ZERO) >0
+                ? orderRequest.getTotalPrice()
+                :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+
         return null;
     }
 
