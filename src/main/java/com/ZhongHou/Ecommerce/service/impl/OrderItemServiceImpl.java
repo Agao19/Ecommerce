@@ -2,6 +2,7 @@ package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.OrderRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.OrderItem;
 import com.ZhongHou.Ecommerce.entity.Product;
 import com.ZhongHou.Ecommerce.entity.User;
@@ -60,7 +61,19 @@ public class OrderItemServiceImpl implements OrderItemService {
                 ? orderRequest.getTotalPrice()
                 :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
 
-        return null;
+        //create order entity
+        Order order=new Order();
+        order.setOrderItemList(orderItems);
+        order.setTotalPrice(totalPrice);
+
+        //set the order reference in each orderitem
+        orderItems.forEach(orderItem -> orderItem.setOrder(order));
+        orderRepository.save(order);
+
+        return Response.builder()
+                .status(200)
+                .message("Order was successfully placed")
+                .build();
     }
 
     @Override
