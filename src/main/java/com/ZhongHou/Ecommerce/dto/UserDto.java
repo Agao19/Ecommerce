@@ -21,7 +21,6 @@ public class UserDto {
     private String name;
     private String phoneNumber;
 
-    @JsonIgnore
     private String password;
     private String role;
     private List<OrderItemDto> orderItemList;
