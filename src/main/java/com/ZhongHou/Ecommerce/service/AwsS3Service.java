@@ -40,7 +40,7 @@ public class AwsS3Service {
             //create an s3 client with config credentials and region
             AmazonS3 s3Client= AmazonS3ClientBuilder.standard()
                     .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
-                    .withRegion(Regions.US_EAST_2)
+                    .withRegion(Regions.AP_SOUTHEAST_2)
                     .build();
 
             //get input stream from photo
