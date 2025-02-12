@@ -5,10 +5,8 @@ import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.service.OrderItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/order")
@@ -21,6 +19,14 @@ public class OrderItemController {
     public ResponseEntity<Response> placeOrder(@RequestBody OrderRequest orderRequest){
         return ResponseEntity.ok(orderItemService.placeOrder(orderRequest));
     }
+
+
+    @PutMapping("/update-item-status/{orderItemId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status){
+        return ResponseEntity.of(orderItemService.updateOrderItemStatus(orderItemId, status));
+    }
+
 
 
 }
