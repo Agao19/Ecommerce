@@ -23,18 +23,22 @@ public class OrderItemController {
     private final OrderItemService orderItemService;
 
     @PostMapping("/create")
-    public ResponseEntity<Response> placeOrder(@RequestBody OrderRequest orderRequest){
+    public ResponseEntity<Response> placeOrder(@RequestBody OrderRequest orderRequest) {
         return ResponseEntity.ok(orderItemService.placeOrder(orderRequest));
     }
 
 
     @PutMapping("/update-item-status/{orderItemId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status){
-        return ResponseEntity.of(orderItemService.updateOrderItemStatus(orderItemId, status));
+    public ResponseEntity<Response> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status)
+    {
+        return ResponseEntity.ok(orderItemService.updateOrderItemStatus(orderItemId, status));
     }
 
 
+
+    @GetMapping("/filter")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> filterOrderItem(
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime startDate,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime endDate,
