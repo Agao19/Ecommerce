@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 public class AddressServiceImpl implements AddressService {
 
     private final AddressRepository addressRepository;
-    private UserService userService;
+    private final UserService userService;
 
 
     @Override

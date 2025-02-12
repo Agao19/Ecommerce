@@ -52,7 +52,7 @@ public class JwtUtils {
     public <T> T extractClaims(String token, Function<Claims,T> claimsTFunction){
         return claimsTFunction.apply(Jwts.parser().verifyWith(key)
                 .build()
-                .parseEncryptedClaims(token)
+                .parseSignedClaims(token) //ko dc dung encrypted (jwe)
                 .getPayload());
     }
 

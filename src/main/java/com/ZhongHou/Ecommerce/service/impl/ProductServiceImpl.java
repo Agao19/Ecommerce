@@ -33,6 +33,7 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
         Category category= categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+
         String productImageUrl=aws.saveImageToS3(image);
 
         Product product = new Product();
@@ -40,6 +41,7 @@ public class ProductServiceImpl implements ProductService {
         product.setName(name);
         product.setDescription(description);
         product.setImageUrl(productImageUrl);
+        product.setPrice(price);
 
         productRepository.save(product);
 

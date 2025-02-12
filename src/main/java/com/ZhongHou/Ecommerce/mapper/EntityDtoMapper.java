@@ -35,7 +35,7 @@ public class EntityDtoMapper {
     //Category to DTO
     public CategoryDto mapCategoryToDtoBasic(Category category){
         CategoryDto categoryDto=new CategoryDto();
-        categoryDto.setId(categoryDto.getId());
+        categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
         return categoryDto;
     }
