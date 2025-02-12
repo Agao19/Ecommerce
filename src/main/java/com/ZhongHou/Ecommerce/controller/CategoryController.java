@@ -35,4 +35,12 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.updateCategory(categoryId,categoryDto));
     }
 
+    @DeleteMapping("/delete/{categoryId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> deleteCategory(@PathVariable Long categoryId){
+        return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
+    }
+
+
+
 }
