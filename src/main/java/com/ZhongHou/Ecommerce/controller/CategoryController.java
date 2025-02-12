@@ -30,6 +30,7 @@ public class CategoryController {
 
 
     @PutMapping("/update/{categoryId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(categoryService.updateCategory(categoryId,categoryDto));
     }
