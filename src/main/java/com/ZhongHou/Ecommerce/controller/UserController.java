@@ -20,4 +20,11 @@ public class UserController {
     public ResponseEntity<Response> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
+
+    @GetMapping("/my-info")
+    public ResponseEntity<Response> getUserInfoAndOrderHistory(){
+        return ResponseEntity.ok(userService.getUserInfoAndOrderHistory());
+    }
+
+
 }
