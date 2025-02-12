@@ -48,4 +48,12 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(productId,categoryId,image,name,description,price));
 
     }
+
+    @DeleteMapping("/delete/{productId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<Response> deleteProduct(@PathVariable Long productId){
+        return ResponseEntity.ok(productService.deleteProduct(productId));
+    }
+
+
 }
