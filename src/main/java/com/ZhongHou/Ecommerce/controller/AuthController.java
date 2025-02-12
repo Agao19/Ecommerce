@@ -1,5 +1,6 @@
 package com.ZhongHou.Ecommerce.controller;
 
+import com.ZhongHou.Ecommerce.dto.LoginRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
 import com.ZhongHou.Ecommerce.service.UserService;
@@ -22,4 +23,8 @@ public class AuthController {
         return ResponseEntity.ok(userService.registerUser(registrationRequest));
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<Response> loginUser(@RequestBody LoginRequest loginRequest){
+        return ResponseEntity.ok(userService.loginUser(loginRequest));
+    }
 }
