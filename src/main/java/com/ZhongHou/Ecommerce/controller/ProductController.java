@@ -55,5 +55,8 @@ public class ProductController {
         return ResponseEntity.ok(productService.deleteProduct(productId));
     }
 
-
+    @GetMapping("/get-all-product-id/{productId}")
+    public  ResponseEntity<Response> getProductById(@PathVariable Long productId){
+        return ResponseEntity.ok(productService.getProductById(productId));
+    }
 }
