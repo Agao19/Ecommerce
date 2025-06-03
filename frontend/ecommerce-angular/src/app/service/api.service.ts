@@ -34,7 +34,7 @@ export class ApiService {
   }
 
   
-  geLoggedInUserInfo(): Observable<any>{
+  getLoggedInUserInfo(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/user/my-info`,{
       headers: this.getHeader()
     });
@@ -62,7 +62,6 @@ export class ApiService {
 
   getAllProducts(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/product/get-all`,{
-
     });
   }
   
@@ -147,13 +146,44 @@ export class ApiService {
   }
 
   deleteOrderItems(orderItemId: string): Observable<any>{
-    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${categoryId}`,{
+    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${orderItemId}`,{
       headers: this.getHeader()
     });
   }
 
+  //Adderss api
+  saveAddress(body: any): Observable<any>{
+    return this.http.post(`${ApiService.BASE_URL}/address/save`,body,{
+      headers: this.getHeader()
+    });
+  }
+
+  //Authentication
+  logout(): void{
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+  }
+
+  isAuthenticated(): boolean{
+    const token=localStorage.getItem('token')
+    return !!token;
+  }
+
+   isAdmin(): boolean{
+    const role=localStorage.getItem('role')
+    return role ==='ADMIN';
+  }
 
 
 
+  // saveToken(token: string): void{
+  //   localStorage.setItem("token", token);
+  // }
 
+  // getToken(): string | null{
+  //   const token=localStorage.getItem("token");
+  //   return token;
+  // }
+
+  
 }
