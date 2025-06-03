@@ -111,6 +111,46 @@ export class ApiService {
     });
   }
 
+  //Order API 
+  
+  createOrder(body: any): Observable<any>{
+    return this.http.post(`${ApiService.BASE_URL}/order/create`,body,{
+      headers: this.getHeader()
+    });
+  }
+
+  updateOrderItem(status: string, orderItemId: string, body: any = {}): Observable<any>{
+    return this.http.put(`${ApiService.BASE_URL}/order/update-item-status/${orderItemId}`,body,{
+      headers: this.getHeader(),
+      params: {status}
+    });
+  }
+
+  getAllOrders( ): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
+      headers: this.getHeader()
+    });
+  }
+
+  
+  getORderItemById(itemId: string): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
+      headers: this.getHeader(),
+      params: {itemId}
+    })
+  }
+  getAllOrdersItemByStatus(status: string): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
+      headers: this.getHeader(),
+      params: {status}
+    });
+  }
+
+  deleteOrderItems(orderItemId: string): Observable<any>{
+    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${categoryId}`,{
+      headers: this.getHeader()
+    });
+  }
 
 
 
