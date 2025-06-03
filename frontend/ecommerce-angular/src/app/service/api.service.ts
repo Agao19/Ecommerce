@@ -62,7 +62,7 @@ export class ApiService {
 
   getAllProducts(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/product/get-all`,{
-      
+
     });
   }
   
@@ -85,6 +85,31 @@ export class ApiService {
   }
 
 
+  //CATEGORY API
+  createCategory(body: any): Observable<any>{
+    return this.http.post(`${ApiService.BASE_URL}/cateogry/create`,body,{
+      headers: this.getHeader()
+    });
+  }
+
+  updateCategory(categoryId: string, body: any): Observable<any>{
+    return this.http.put(`${ApiService.BASE_URL}/cateogry/update/${categoryId}`,body,{
+      headers: this.getHeader()
+    });
+  }
+  getAllCategories(): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/cateogry/get-all`)
+  }
+  getByCategoryId(categoryId: string): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/cateogry/get-category-by-id/${categoryId}`,{
+    });
+  }
+
+  deleteCategory(categoryId: string): Observable<any>{
+    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${categoryId}`,{
+      headers: this.getHeader()
+    });
+  }
 
 
 
