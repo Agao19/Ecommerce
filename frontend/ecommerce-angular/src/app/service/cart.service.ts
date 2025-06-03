@@ -64,4 +64,9 @@ export class CartService {
     }
   }
 
+  clearCart(){
+    this.cart= [];
+    localStorage.removeItem('cart')
+  }
+
 }
