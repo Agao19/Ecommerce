@@ -41,7 +41,48 @@ export class ApiService {
   }
 
   //PRODUCTS API
+  addProduct(body: any): Observable<any>{
+    return this.http.post(`${ApiService.BASE_URL}/product/create`,body,{
+      headers: this.getHeader()
+    });
+  }
+
+  updateProduct(body: any): Observable<any>{
+    return this.http.put(`${ApiService.BASE_URL}/product/update`,body,{
+      headers: this.getHeader()
+    });
+  }
+
+  searchForProduct(body: any): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/product/search`,{
+      params: {body},
+
+    });
+  }
+
+  getAllProducts(): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/product/get-all`,{
+      
+    });
+  }
   
+  getProductByProductId(productId: string): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/product/get-by-product-id/${productId}`,{
+     
+    });
+  }
+  
+  getProductsByCategoryId(categoryId: string): Observable<any>{
+    return this.http.get(`${ApiService.BASE_URL}/product/get-by-category-id/${categoryId}`,{
+     
+    });
+  }
+
+  deleteProduct(productId: string): Observable<any>{
+    return this.http.delete(`${ApiService.BASE_URL}/product/delete/${productId}`,{
+      headers: this.getHeader()
+    });
+  }
 
 
 
