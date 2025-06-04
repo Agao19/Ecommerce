@@ -2,13 +2,13 @@ div{
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
-    border: 1px soled #ddd;
+    border: 1px solid #ddd;
     border-radius: 10px;
+    margin-bottom: 8rem;
 }
 
 h2{
-    text-align: flex;
-    flex-direction: column;
+    text-align: center;
     margin-bottom: 20px;
 }
 
