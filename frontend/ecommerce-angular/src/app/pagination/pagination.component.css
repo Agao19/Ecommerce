@@ -1,12 +1,13 @@
-div{
+div {
     display: flex;
     justify-content: center;
     margin-top: 30px;
+    margin-bottom: 9rem;
 }
 
-button{
+button {
     margin: 0 5px;
-    padding: 10px;
+    padding: 10px 15px;
     border: none;
     background-color: #f0f0f0;
     cursor: pointer;
@@ -14,11 +15,11 @@ button{
     border-radius: 5px;
 }
 
-button.active{
+button.active {
     background-color: #f68b1e;
     color: #fff;
 }
 
-button:hove{
+button:hover {
     color: #fff;
 }

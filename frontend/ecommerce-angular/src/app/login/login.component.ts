@@ -8,6 +8,7 @@ import { ApiService } from '../service/api.service';
 @Component({
   selector: 'app-login',
   imports: [CommonModule,FormsModule, RouterLink],
+  standalone: true,  // Thêm dòng này
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
