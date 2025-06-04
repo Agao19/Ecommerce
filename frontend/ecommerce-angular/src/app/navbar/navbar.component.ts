@@ -18,6 +18,7 @@ export class NavbarComponent implements OnInit, OnDestroy{
 
   constructor(private readonly apiService: ApiService, private router: Router) {}
 
+  //trạng thái ban đầu
   ngOnInit(): void {
     this.isAuthenticated=this.apiService.isAuthenticated();
     this.isAdmin=this.apiService.isAdmin();
