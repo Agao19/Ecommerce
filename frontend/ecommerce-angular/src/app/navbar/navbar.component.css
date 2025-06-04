@@ -1,9 +1,9 @@
 nav{
     display: flex;
-    justify-content: space-around;
     align-items: center;
+    gap: 32px;
     background-color: #F68B1E;
-    padding: 15px;
+    padding: 10px 32px;
     font-size: 20px;
     font-weight: 600;
 }
@@ -28,6 +28,23 @@ button{
 a{
     text-decoration: none;
     color: #fff;
+    margin: 0 10px;     
     font-weight: bold;
     font-size: 24px;
+    
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-container img {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: none;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 5px;
 }

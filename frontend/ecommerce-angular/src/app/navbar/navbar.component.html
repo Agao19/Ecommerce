@@ -1,7 +1,12 @@
 <nav>
-    <a
-    routerLink="/"> Logo <img src="" alt="">
-    </a>
+    <div class="logo-container">
+        <a
+        routerLink="/">  
+        <img src="assets/images/store.png" alt="Logo" style="height: 40px; width: 40px;"> 
+        </a>
+    </div>
+   
+    
     <!-- SEARCH FORM-->
     <form (submit)="handleSearchSubmit()">
         <input type="text" placeholder="Search product..." name="searchValue" [(ngModel)]="searchValue">
