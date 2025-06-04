@@ -1,0 +1,24 @@
+<nav>
+    <div class="logo-container">
+        <a
+        routerLink="/">  
+        <img src="assets/images/store.png" alt="Logo" style="height: 40px; width: 40px;"> 
+        </a>
+    </div>
+   
+    
+    <!-- SEARCH FORM-->
+    <form (submit)="handleSearchSubmit()">
+        <input type="text" placeholder="Search product..." name="searchValue" [(ngModel)]="searchValue">
+        <button type="submit"> Search</button>
+    </form>
+    <div>
+        <a routerLink="/">HOME</a>
+        <a routerLink="/category">CATEGORY</a>
+        <a *ngIf="isAuthenticated" routerLink="/profile">ACCOUNT</a>
+        <a *ngIf="isAdmin" routerLink="/admin">ADMIN</a>
+        <a *ngIf="!isAuthenticated" routerLink="/login">LOGIN</a>
+        <a *ngIf="isAuthenticated" (click)="handleLogout()">LOGOUT</a>
+        <a routerLink="/cart">CART</a>
+    </div>
+</nav>
