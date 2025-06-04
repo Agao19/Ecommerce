@@ -8,6 +8,7 @@ import { catchError, map, of } from 'rxjs';
 @Component({
   selector: 'app-productdetails',
   imports: [CommonModule],
+  standalone: true,
   templateUrl: './productdetails.component.html',
   styleUrl: './productdetails.component.css'
 })
@@ -27,7 +28,7 @@ export class ProductdetailsComponent implements OnInit{
 
   async fetchProduct(){
     if(this.productId){
-      this.apiService.getByCategoryId(this.productId).pipe(
+      this.apiService.getProductByProductId(this.productId).pipe(
         catchError(error =>{
           this.error=error.message;
           return of(null);

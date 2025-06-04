@@ -5,9 +5,7 @@
     <p>{{product?.description}}</p>
     <span>{{product.price.toFixed(2)}}</span>
 
-    <ng-template #loading> 
-        <p>Loading product details ..</p>
-    </ng-template>
+
         
         <ng-container *ngIf="cartItem; else addToCartBtn">
             <div class="quantity-controls">
@@ -21,3 +19,7 @@
             <button (click)="addToCart()"> Add To Cart</button>
         </ng-template>
 </div>
+
+    <ng-template #loading> 
+        <p>Loading product details ..</p>
+    </ng-template>

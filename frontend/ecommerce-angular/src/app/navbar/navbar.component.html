@@ -14,7 +14,7 @@
     </form>
     <div>
         <a routerLink="/">HOME</a>
-        <a routerLink="/category">CATEGORY</a>
+        <a routerLink="/categories">CATEGORY</a>
         <a *ngIf="isAuthenticated" routerLink="/profile">ACCOUNT</a>
         <a *ngIf="isAdmin" routerLink="/admin">ADMIN</a>
         <a *ngIf="!isAuthenticated" routerLink="/login">LOGIN</a>
