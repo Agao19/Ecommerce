@@ -8,6 +8,8 @@ import { CategoryproductsComponent } from './categoryproducts/categoryproducts.c
 import { CartComponent } from './cart/cart.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AddressComponent } from './address/address.component';
+import { AdminComponent } from './admin/admin/admin.component';
+import { userGuard, adminGuard } from './service/guard.service';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -18,12 +20,15 @@ export const routes: Routes = [
     {path:'categories', component: CategoryComponent},
     {path:'products/:categoryId', component: CategoryproductsComponent},
     {path:'cart', component: CartComponent},
+    
 
     //USER ROUTES
-    
-    {path:'profile', component: ProfileComponent},
-    {path:'add-address', component: AddressComponent},
-    {path:'edit-address', component: AddressComponent},
+    {path:'profile', component: ProfileComponent, canActivate: [userGuard]},
+    {path:'add-address', component: AddressComponent, canActivate: [userGuard]},
+    {path:'edit-address', component: AddressComponent, canActivate: [userGuard]},
+
+    //ADMIN ROUTES
+    {path:'admin', component: AdminComponent, canActivate: [adminGuard]},
     
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},
