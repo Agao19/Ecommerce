@@ -125,7 +125,7 @@ export class ApiService {
     });
   }
 
-  getAllOrders( ): Observable<any>{
+  getAllOrders(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
       headers: this.getHeader()
     });
