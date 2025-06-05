@@ -17,8 +17,7 @@ export class ApiService {
   private getHeader(): HttpHeaders{
     const token=localStorage.getItem('token');
     return new HttpHeaders({
-      'Authorization': `Bear: ${token}`,
-      "Content-Type": "application/json"
+      'Authorization': `Bearer ${token}`
     });
   }
 
@@ -34,10 +33,10 @@ export class ApiService {
   }
 
   
-  getLoggedInUserInfo(): Observable<any>{
-    return this.http.get(`${ApiService.BASE_URL}/user/my-info`,{
+  getLoggedInUserInfo(): Observable<any> {
+    return this.http.get(`${ApiService.BASE_URL}/user/my-info`, {
       headers: this.getHeader()
-    });
+    })
   }
 
   //PRODUCTS API

@@ -5,7 +5,7 @@
     <div class="filter-container">
         <div>
             <label for="">Filter By Status</label>
-            <select [(ngModel="statusFilter")] (change) ="handleFilterChange()">
+            <select [(ngModel)]="statusFilter" (change) ="handleFilterChange()">
                 <option value="">All</option>
                 <option *ngFor="let status of OrderStatus" [value]="status"> {{status}}</option>
             </select>

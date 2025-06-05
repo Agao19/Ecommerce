@@ -13,7 +13,7 @@ import { ApiService } from '../service/api.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  constructor(private router:Router, private apiService: ApiService){}
+  constructor(private router:Router, private readonly apiService: ApiService){}
   formData: any= {
     email: '',
     password: ''

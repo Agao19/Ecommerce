@@ -29,7 +29,7 @@ export class ProfileComponent implements OnInit{
       },
       error: (error) => {
         console.log(error)
-        this.error = error?.error?.message || "Unable to fetch user informatio"
+        this.error = error?.error?.message || "Unable to fetch user information"
       }
     })
   }
