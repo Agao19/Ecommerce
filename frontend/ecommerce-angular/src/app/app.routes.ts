@@ -16,6 +16,7 @@ import { EditcategoryComponent } from './admin/editcategory/editcategory.compone
 import { AdminproductComponent } from './admin/adminproduct/adminproduct.component';
 import { AddproductComponent } from './admin/addproduct/addproduct.component';
 import { EditproductComponent } from './admin/editproduct/editproduct.component';
+import { AdminorderComponent } from './admin/adminorder/adminorder.component';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -41,6 +42,7 @@ export const routes: Routes = [
     {path:'admin/products', component: AdminproductComponent, canActivate: [adminGuard]},
      {path:'admin/add-product', component: AddproductComponent, canActivate: [adminGuard]},
      {path:'admin/edit-product/:productId', component: EditproductComponent, canActivate: [adminGuard]},
+     {path:'admin/orders', component: AdminorderComponent, canActivate: [adminGuard]},
 
 
 
