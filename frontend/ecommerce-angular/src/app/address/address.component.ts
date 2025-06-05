@@ -25,7 +25,7 @@ export class AddressComponent implements OnInit{
       street: ['',Validators.required],
       city: ['',Validators.required],
       state: ['',Validators.required],
-      zipCode: ['',Validators.required, Validators.pattern('^[0-9]*$')],
+      zipCode: ['',Validators.pattern('^[0-9]*$')],
       country: ['',Validators.required]
     })
 
@@ -53,6 +53,7 @@ export class AddressComponent implements OnInit{
       this.showError('Please fill in all fields')
       return;
     }
+
     this.apiService.saveAddress(this.addressForm.value).subscribe({
       next:(response)=>{
         this.router.navigate(['/profile'])

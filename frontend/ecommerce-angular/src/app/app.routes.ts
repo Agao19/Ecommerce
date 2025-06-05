@@ -7,6 +7,7 @@ import { CategoryComponent } from './category/category.component';
 import { CategoryproductsComponent } from './categoryproducts/categoryproducts.component';
 import { CartComponent } from './cart/cart.component';
 import { ProfileComponent } from './profile/profile.component';
+import { AddressComponent } from './address/address.component';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -21,6 +22,8 @@ export const routes: Routes = [
     //USER ROUTES
     
     {path:'profile', component: ProfileComponent},
+    {path:'add-address', component: AddressComponent},
+    {path:'edit-address', component: AddressComponent},
     
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},
