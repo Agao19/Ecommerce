@@ -24,7 +24,7 @@ export class AddcategoryComponent {
       this.apiService.createCategory(this.categoryForm.value).subscribe({
         next: (response) =>{
           if(response.status===200){
-            this.message="cateogry successfully saved"
+            this.message="category successfully saved"
             setTimeout(()=>{
               this.message=null;
               this.router.navigate(['/admin/categories']);

@@ -31,7 +31,7 @@ export const routes: Routes = [
     //ADMIN ROUTES
     {path:'admin', component: AdminComponent, canActivate: [adminGuard]},
     {path:'admin/categories', component: AdmincategoryComponent, canActivate: [adminGuard]},
-    
+    {path:'admin/add-category', component: AdmincategoryComponent, canActivate: [adminGuard]},
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},
     {path:'**', redirectTo: '/home'},
