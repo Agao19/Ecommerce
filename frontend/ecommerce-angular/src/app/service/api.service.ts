@@ -17,8 +17,7 @@ export class ApiService {
   private getHeader(): HttpHeaders{
     const token=localStorage.getItem('token');
     return new HttpHeaders({
-      'Authorization': `Bear: ${token}`,
-      "Content-Type": "application/json"
+      'Authorization': `Bearer ${token}`
     });
   }
 
@@ -34,10 +33,10 @@ export class ApiService {
   }
 
   
-  getLoggedInUserInfo(): Observable<any>{
-    return this.http.get(`${ApiService.BASE_URL}/user/my-info`,{
+  getLoggedInUserInfo(): Observable<any> {
+    return this.http.get(`${ApiService.BASE_URL}/user/my-info`, {
       headers: this.getHeader()
-    });
+    })
   }
 
   //PRODUCTS API
@@ -118,14 +117,14 @@ export class ApiService {
     });
   }
 
-  updateOrderItem(status: string, orderItemId: string, body: any = {}): Observable<any>{
+  updateOrderItemStatus(status: string, orderItemId: string, body: any = {}): Observable<any>{
     return this.http.put(`${ApiService.BASE_URL}/order/update-item-status/${orderItemId}`,body,{
       headers: this.getHeader(),
       params: {status}
     });
   }
 
-  getAllOrders( ): Observable<any>{
+  getAllOrders(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
       headers: this.getHeader()
     });
