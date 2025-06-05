@@ -1,1 +1,15 @@
-<p>adminorderdetails works!</p>
+<div class="container">
+    <p *ngIf="message" class="message">{{message}}</p>
+    <h1>Order Details</h1>
+
+    <ng-container *ngIf="orderItem.length; else loading">
+        <div *ngFor="let item of orderItem" class="item-details">
+
+        </div>
+    </ng-container>
+
+    <ng-template #loading>
+        <p>Loading ....</p>
+    </ng-template>
+
+</div>
