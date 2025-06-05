@@ -10,6 +10,7 @@ import { ProfileComponent } from './profile/profile.component';
 import { AddressComponent } from './address/address.component';
 import { AdminComponent } from './admin/admin/admin.component';
 import { userGuard, adminGuard } from './service/guard.service';
+import { AdmincategoryComponent } from './admin/admincategory/admincategory.component';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -29,6 +30,7 @@ export const routes: Routes = [
 
     //ADMIN ROUTES
     {path:'admin', component: AdminComponent, canActivate: [adminGuard]},
+    {path:'admin/categories', component: AdmincategoryComponent, canActivate: [adminGuard]},
     
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},
