@@ -5,6 +5,7 @@ import { HomeComponent } from './home/home.component';
 import { ProductdetailsComponent } from './productdetails/productdetails.component';
 import { CategoryComponent } from './category/category.component';
 import { CategoryproductsComponent } from './categoryproducts/categoryproducts.component';
+import { CartComponent } from './cart/cart.component';
 
 export const routes: Routes = [
     {path:'register', component: RegisterComponent},
@@ -13,6 +14,7 @@ export const routes: Routes = [
     {path:'product/:productId', component: ProductdetailsComponent},
     {path:'categories', component: CategoryComponent},
     {path:'products/:categoryId', component: CategoryproductsComponent},
+    {path:'cart', component: CartComponent},
     
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},

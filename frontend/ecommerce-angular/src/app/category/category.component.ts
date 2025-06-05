@@ -32,6 +32,6 @@ export class CategoryComponent implements OnInit{
     })
   }
   handleCategoryClick(categoryId: number): void{
-    this.router.navigate(['/category', categoryId])
+    this.router.navigate(['/products', categoryId])
   }
 }
