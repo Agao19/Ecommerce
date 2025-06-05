@@ -1,1 +1,19 @@
-<p>admincategory works!</p>
+<div class="admin">
+    <div>
+        <h2> Categories </h2>
+        <button (click)="addCategory()"> Add Category</button>
+
+        <ul>
+            <li *ngFor="let category of categories">
+                <span>{{category.name}}</span>
+                <div>
+                    <button (click)="handleEdit(category.id)">Edit</button>
+                    <button class="delete" (click)="handleDelete(category.name)"> Delete</button>
+                </div>
+            </li>
+
+        </ul>
+
+
+    </div>
+</div>
