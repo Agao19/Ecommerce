@@ -11,6 +11,8 @@ import { AddressComponent } from './address/address.component';
 import { AdminComponent } from './admin/admin/admin.component';
 import { userGuard, adminGuard } from './service/guard.service';
 import { AdmincategoryComponent } from './admin/admincategory/admincategory.component';
+import { AddcategoryComponent } from './admin/addcategory/addcategory.component';
+import { EditcategoryComponent } from './admin/editcategory/editcategory.component';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -31,7 +33,14 @@ export const routes: Routes = [
     //ADMIN ROUTES
     {path:'admin', component: AdminComponent, canActivate: [adminGuard]},
     {path:'admin/categories', component: AdmincategoryComponent, canActivate: [adminGuard]},
-    {path:'admin/add-category', component: AdmincategoryComponent, canActivate: [adminGuard]},
+    {path:'admin/add-category', component: AddcategoryComponent, canActivate: [adminGuard]},
+    {path:'admin/edit-category/:categoryId', component: EditcategoryComponent, canActivate: [adminGuard]},
+
+
+
+
+
+    
     //Redirect home
     {path:'', redirectTo: '/home', pathMatch: 'full'},
     {path:'**', redirectTo: '/home'},
