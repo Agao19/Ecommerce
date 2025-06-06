@@ -41,7 +41,7 @@ export class AddproductComponent implements OnInit{
   }
 
   handleSubmit():void{
-    if (!this.image || !this.categoryId || !this.name || this.description || this.price) {
+    if (!this.image || !this.categoryId || !this.name || !this.description || !this.price) {
       this.message="Please fill in all fields";
       return;
     }
@@ -55,6 +55,7 @@ export class AddproductComponent implements OnInit{
 
       this.apiService.addProduct(formData).subscribe({
         next: (res)=>{
+          console.log('Add Product Response:', res);
           this.message = res.message;
           setTimeout(()=>{
             this.router.navigate(['/admin.products'])

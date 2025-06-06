@@ -30,18 +30,21 @@ export class EditproductComponent implements OnInit{
     })
 
     this.apiService.getAllCategories().subscribe(res =>{
-      this.categories = res.categoryList;
+      console.log('Categories Response:', res);
+      this.categories = res.categoryList; //this.categories sử dụng trong template HTML
     })
 
-    if(this.productId){
-      this.apiService.getProductByProductId(this.productId).subscribe(res =>{
+    if(this.productId){//productId => lấy từ url
+      this.apiService.getProductByProductId(this.productId)
+      .subscribe(response =>{
+        console.log('Product Response:', response);
         this.editProductForm.patchValue({
-          categoryId: res.product.categoryId,
-          name: res.product.name,
-          description: res.product.description,
-          price: res.product.price
+          categoryId: response.product.categoryId, //response ở đây là response từ getProductByProductId
+          name: response.product.name,
+          description: response.product.description,
+          price: response.product.price
         });
-        this.imageUrl = res.product.imageUrl;
+        this.imageUrl = response.product.imageUrl;
       })
     }
   }
@@ -75,6 +78,12 @@ export class EditproductComponent implements OnInit{
     formData.append('name',formValues.name)
     formData.append('description',formValues.description)
     formData.append('price',formValues.price)
+
+    console.log("Product ID: " + this.productId)
+    console.log("categoryId ID: " + formValues.categoryId)
+    console.log("NAme : " + formValues.name)
+    console.log("Des : " + formValues.description)
+    console.log("Price: " + formValues.price)
 
     this.apiService.updateProduct(formData).subscribe({
       next: (res) =>{

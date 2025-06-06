@@ -28,7 +28,7 @@
         </div>
 
         <div class="form-group">
-            <label for="zipCode"> Street: </label>
+            <label for="zipCode"> Zip Code: </label>
             <input id="zipCode" type="number" formControlName="zipCode" required>
             <div *ngIf="addressForm.get('zipCode')?.invalid && addressForm.get('zipCode')?.touched" class="error">
                 ZipCode is required

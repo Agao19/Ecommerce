@@ -5,7 +5,7 @@
 
     <ng-template #categoryList>
         <div>
-            <h2>Cateogries</h2>
+            <h2>Category</h2>
             <ul *ngFor="let category of categories" (click)="handleCategoryClick(category.id)">
                 <li><button>{{category.name}}</button></li>
             </ul>

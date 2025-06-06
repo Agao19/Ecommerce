@@ -25,10 +25,13 @@ export class ProfileComponent implements OnInit{
   fetchUserInfo():void{
     this.apiService.getLoggedInUserInfo().subscribe({
       next: (response) => {
-        this.userInfo = response.user
+        console.log('User Info Response:', response);
+        this.userInfo = response.user;
+        console.log('User Info after assignment:', this.userInfo);
+        console.log('Order Item List:', this.userInfo?.orderItemList);
       },
       error: (error) => {
-        console.log(error)
+        console.log('Error:', error)
         this.error = error?.error?.message || "Unable to fetch user information"
       }
     })
@@ -44,15 +47,15 @@ export class ProfileComponent implements OnInit{
   }
 
   get paginatedOrders(): any[]{
-    if(!this.userInfo?.orderItemlist) return[];
+    if(!this.userInfo?.orderItemList) return[];
     
-    return this.userInfo.orderItemlist.slice(
+    return this.userInfo.orderItemList.slice(
       (this.currentPage-1)*this.itemsPerpage,
       this.currentPage * this.itemsPerpage
     )
   }
 
   get totalPages():number {
-    return Math.ceil((this.userInfo?.orderItemlist?.length || 0) / this.itemsPerpage)
+    return Math.ceil((this.userInfo?.orderItemList?.length || 0) / this.itemsPerpage)
   }
 }

@@ -39,7 +39,7 @@
                     <td>{{order.user.name}}</td>
                     <td>{{order.status}}</td>
                     <td>{{order.price.toFixed(2)}}</td>
-                    <td>{{order.createAt | date: 'dd//MM/yyyy'}}</td>
+                    <td>{{order.createdAt | date: 'dd/MM/yyyy'}}</td>
                     <td>
                         <button (click)="navigateToOrderDetailsPage(order.id)">Details</button>
                     </td>

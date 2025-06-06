@@ -117,12 +117,7 @@ export class ApiService {
     });
   }
 
-  updateOrderItemStatus(status: string, orderItemId: string, body: any = {}): Observable<any>{
-    return this.http.put(`${ApiService.BASE_URL}/order/update-item-status/${orderItemId}`,body,{
-      headers: this.getHeader(),
-      params: {status}
-    });
-  }
+  
 
   getAllOrders(): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
@@ -139,6 +134,13 @@ export class ApiService {
   }
   getAllOrdersItemByStatus(status: string): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/order/filter`,{
+      headers: this.getHeader(),
+      params: {status}
+    });
+  }
+
+  updateOrderItemStatus( orderItemId: string, status: string): Observable<any>{
+    return this.http.put(`${ApiService.BASE_URL}/order/update-item-status/${orderItemId}`, {},{
       headers: this.getHeader(),
       params: {status}
     });

@@ -53,13 +53,14 @@ export class AddressComponent implements OnInit{
       this.showError('Please fill in all fields')
       return;
     }
-
+    
     this.apiService.saveAddress(this.addressForm.value).subscribe({
       next:(response)=>{
+        console.log('Save Address Response:', response)
         this.router.navigate(['/profile'])
       },
       error: (error)=>{
-        console.log(error)
+        console.log('Error:', error)
         this.showError(error?.error?.message || 'unable to get user address')
       }
     })
