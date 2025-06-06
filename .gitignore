@@ -1,0 +1,4 @@
+/backend/target
+/*.txt
+/aws.env
+/backend/src/main/aws.env
