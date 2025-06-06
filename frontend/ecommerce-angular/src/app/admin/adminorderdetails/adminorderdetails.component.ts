@@ -57,4 +57,17 @@ export class AdminorderdetailsComponent implements OnInit{
     })
   }
 
+  handleImageError(event: any) {
+    console.error('Image load error:', event);
+    const imgElement = event.target as HTMLImageElement;
+    imgElement.style.display = 'none';
+    const parent = imgElement.parentElement;
+    if (parent) {
+      const noImageDiv = document.createElement('div');
+      noImageDiv.className = 'no-image';
+      noImageDiv.textContent = 'Image failed to load';
+      parent.appendChild(noImageDiv);
+    }
+  }
+
 }

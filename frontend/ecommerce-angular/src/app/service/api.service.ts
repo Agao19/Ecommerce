@@ -10,7 +10,7 @@ export class ApiService {
 
   authStatuschanged = new EventEmitter<void>();
 
-  private static BASE_URL = `http://localhost:8080`;
+  private static BASE_URL = `http://localhost:3030`;
 
   constructor(private http: HttpClient) { }
 
@@ -85,26 +85,26 @@ export class ApiService {
 
   //CATEGORY API
   createCategory(body: any): Observable<any>{
-    return this.http.post(`${ApiService.BASE_URL}/cateogry/create`,body,{
+    return this.http.post(`${ApiService.BASE_URL}/category/create`,body,{
       headers: this.getHeader()
     });
   }
 
   updateCategory(categoryId: string, body: any): Observable<any>{
-    return this.http.put(`${ApiService.BASE_URL}/cateogry/update/${categoryId}`,body,{
+    return this.http.put(`${ApiService.BASE_URL}/category/update/${categoryId}`,body,{
       headers: this.getHeader()
     });
   }
   getAllCategories(): Observable<any>{
-    return this.http.get(`${ApiService.BASE_URL}/cateogry/get-all`)
+    return this.http.get(`${ApiService.BASE_URL}/category/get-all`)
   }
   getByCategoryId(categoryId: string): Observable<any>{
-    return this.http.get(`${ApiService.BASE_URL}/cateogry/get-category-by-id/${categoryId}`,{
+    return this.http.get(`${ApiService.BASE_URL}/category/get-category-by-id/${categoryId}`,{
     });
   }
 
   deleteCategory(categoryId: string): Observable<any>{
-    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${categoryId}`,{
+    return this.http.delete(`${ApiService.BASE_URL}/category/create/${categoryId}`,{
       headers: this.getHeader()
     });
   }
@@ -145,7 +145,7 @@ export class ApiService {
   }
 
   deleteOrderItems(orderItemId: string): Observable<any>{
-    return this.http.delete(`${ApiService.BASE_URL}/cateogry/create/${orderItemId}`,{
+    return this.http.delete(`${ApiService.BASE_URL}/category/create/${orderItemId}`,{
       headers: this.getHeader()
     });
   }

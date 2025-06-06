@@ -9,9 +9,9 @@
         
         <ng-container *ngIf="inInCart(product); else addToCartBtn">
             <div class="quantity-controls">
-                <button (click)="decrementItem(product)"></button>
+                <button (click)="decrementItem(product)">-</button>
                 <span>{{getCartItem(product) ?.quantity}}</span>
-                <button (click)="incrementItem(product)"></button>
+                <button (click)="incrementItem(product)">+</button>
             </div>
         </ng-container>
 
