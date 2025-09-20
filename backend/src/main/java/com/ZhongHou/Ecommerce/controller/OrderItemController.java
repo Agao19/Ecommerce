@@ -45,12 +45,13 @@ public class OrderItemController {
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Long itemId,
             @RequestParam(defaultValue = "0") int  page,
-            @RequestParam(defaultValue = "1000") int size
+            @RequestParam(defaultValue = "100") int size
             ){
         Pageable pageable= PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"id"));
         OrderStatus orderStatus=status  != null ? OrderStatus.valueOf(status.toUpperCase()) :null;
 
-        return ResponseEntity.ok(orderItemService.filterOrderItems(orderStatus,startDate,endDate,itemId,pageable));
+        return ResponseEntity.ok(orderItemService
+                                .filterOrderItems(orderStatus,startDate,endDate,itemId,pageable));
     }
 
 }

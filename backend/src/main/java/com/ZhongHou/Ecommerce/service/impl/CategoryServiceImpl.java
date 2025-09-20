@@ -1,6 +1,7 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
+import com.ZhongHou.Ecommerce.dto.OrderItemDto;
 import com.ZhongHou.Ecommerce.dto.Response;
 import com.ZhongHou.Ecommerce.entity.Category;
 import com.ZhongHou.Ecommerce.exception.NotFoundException;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -37,7 +39,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response updateCategory(Long categoryId, CategoryDto categoryRequest) {
-        Category category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+        Category category=categoryRepository.findById(categoryId)
+        .orElseThrow(()->new NotFoundException("Category not found"));
         category.setName(categoryRequest.getName());
         categoryRepository.save(category);
         return Response.builder()
@@ -46,12 +49,32 @@ public class CategoryServiceImpl implements CategoryService {
                 .build();
     }
 
+    // @Override
+    // public Response getAllCategories( ) {
+    //     List<Category> categories=categoryRepository.findAll();
+       
+    //     List<CategoryDto> categoryDtoList=categories.stream()
+    //             //.map(entityDtoMapper::mapOrderItemToDtoPlusProductAndUser)
+    //             .map(item -> entityDtoMapper.mapCategoryToDtoBasic(item))
+    //             .collect(Collectors.toList());
+
+    //     return Response.builder()
+    //             .status(200)
+    //             .categoryList(categoryDtoList)
+    //             .build();
+    // }
+
     @Override
     public Response getAllCategories( ) {
         List<Category> categories=categoryRepository.findAll();
-        List<CategoryDto> categoryDtoList=categories.stream()
-                .map(entityDtoMapper::mapCategoryToDtoBasic)
-                .collect(Collectors.toList());
+       
+        List<CategoryDto> categoryDtoList= new ArrayList<>();
+        
+        for (Category category : categories) {
+            CategoryDto categoryDto = entityDtoMapper.mapCategoryToDtoBasic(category);
+            categoryDtoList.add(categoryDto);
+        }
+
 
         return Response.builder()
                 .status(200)
@@ -61,7 +84,8 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response getCategoryById(Long categoryId) {
-        Category category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+        Category category=categoryRepository.findById(categoryId)
+        .orElseThrow(()->new NotFoundException("Category not found"));
         CategoryDto categoryDto=entityDtoMapper.mapCategoryToDtoBasic(category);
         return Response.builder()
                 .status(200)

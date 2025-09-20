@@ -70,7 +70,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<Response> searchProduct(@RequestParam String searchValue){
         return ResponseEntity.ok(productService.searchProduct(searchValue));
     }

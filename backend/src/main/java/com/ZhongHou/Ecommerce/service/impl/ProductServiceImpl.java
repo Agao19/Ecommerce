@@ -31,15 +31,20 @@ public class ProductServiceImpl implements ProductService {
     private final AwsS3Service aws;
 
     @Override
-    public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
+    public Response createProduct(Long categoryId, 
+                        MultipartFile image, 
+                        String name, 
+                        String description, BigDecimal price) {
         Category category= categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
 
         String productImageUrl=aws.saveImageToS3(image);
+        //String productImageUrlLocal=aws.saveImageToLocal(image);
 
         Product product = new Product();
         product.setCategory(category);
         product.setName(name);
         product.setDescription(description);
+        //product.setImageUrl(productImageUrlLocal);
         product.setImageUrl(productImageUrl);
         product.setPrice(price);
 
@@ -59,11 +64,13 @@ public class ProductServiceImpl implements ProductService {
         String productImageUrl=null;
 
         if (category != null) {
-            category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category Not Found"));
+            category=categoryRepository.findById(categoryId)
+            .orElseThrow(()->new NotFoundException("Category Not Found"));
         }
 
         if (image != null && !image.isEmpty()){
-            productImageUrl=aws.saveImageToS3(image);
+            //productImageUrl=aws.saveImageToS3(image);
+            productImageUrl=aws.saveImageToLocal(image);
         }
 
         if (category != null) product.setCategory(category);
@@ -147,4 +154,8 @@ public class ProductServiceImpl implements ProductService {
                     .productList(productDtoList)
                     .build();
     }
+
+   
+
+
 }

@@ -33,8 +33,7 @@ public class JwtUtils {
         this.key=new SecretKeySpec(keyBytes,"HmacSHA256");
     }
     public String generateToken(User user){
-        String username=user.getEmail();
-        return generateToken(username);
+        return generateToken(user.getEmail());
     }
     public String generateToken(String username){
         return Jwts.builder()

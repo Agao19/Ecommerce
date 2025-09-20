@@ -96,13 +96,19 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Response filterOrderItems(OrderStatus status, LocalDateTime startDate, LocalDateTime endDate, Long itemId, Pageable pageable) {
-        Specification<OrderItem> spec= Specification.where(OrderItemSpecifications.hasStatus(status))
+    public Response filterOrderItems(OrderStatus status, 
+                                LocalDateTime startDate, 
+                                LocalDateTime endDate, 
+                                Long itemId, 
+                                Pageable pageable) {
+        
+        Specification<OrderItem> spec= Specification
+                .where(OrderItemSpecifications.hasStatus(status))
                 .and(OrderItemSpecifications.createdBetween(startDate, endDate))
                 .and(OrderItemSpecifications.hasItemId(itemId));
 
         Page<OrderItem> orderItemPage=orderItemRepository.findAll(spec,pageable);
-
+                                                                
         if (orderItemPage.isEmpty()){
             throw new NotFoundException("No order found");
         }

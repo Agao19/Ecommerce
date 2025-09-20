@@ -10,7 +10,7 @@ export class ApiService {
 
   authStatuschanged = new EventEmitter<void>();
 
-  private static BASE_URL = `http://localhost:3030`;
+  private static BASE_URL = `http://localhost:8080`;
 
   constructor(private http: HttpClient) { }
 
@@ -52,9 +52,9 @@ export class ApiService {
     });
   }
 
-  searchForProduct(body: any): Observable<any>{
+  searchForProduct(searchValue: any): Observable<any>{
     return this.http.get(`${ApiService.BASE_URL}/product/search`,{
-      params: {body},
+      params: {searchValue},
 
     });
   }

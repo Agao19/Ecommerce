@@ -20,4 +20,7 @@ public interface ProductService {
     Response getProductsByCategory(Long categoryId);
 
     Response searchProduct(String searchValue);
+
+    
+
 }

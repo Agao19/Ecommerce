@@ -24,6 +24,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Response> handleNotFoundException(NotFoundException ex, WebRequest request){
+        
         Response errorResponse=Response.builder()
                 .status(HttpStatus.NOT_FOUND.value())
                 .message(ex.getMessage())
