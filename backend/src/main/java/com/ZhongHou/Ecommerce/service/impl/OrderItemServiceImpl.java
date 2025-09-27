@@ -1,5 +1,6 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
+import com.ZhongHou.Ecommerce.dto.NotificationDTO;
 import com.ZhongHou.Ecommerce.dto.OrderItemDto;
 import com.ZhongHou.Ecommerce.dto.OrderRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
@@ -10,9 +11,11 @@ import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.OrderStatus;
 import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
+import com.ZhongHou.Ecommerce.repository.NotificationRepository;
 import com.ZhongHou.Ecommerce.repository.OrderItemRepository;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
 import com.ZhongHou.Ecommerce.repository.ProductRepository;
+import com.ZhongHou.Ecommerce.service.OrderGenerator;
 import com.ZhongHou.Ecommerce.service.OrderItemService;
 import com.ZhongHou.Ecommerce.service.UserService;
 import com.ZhongHou.Ecommerce.specification.OrderItemSpecifications;
@@ -40,6 +43,11 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final UserService userService;
     private final EntityDtoMapper entityDtoMapper;
 
+    //
+    private final OrderGenerator orderGenerator;
+    private final NotiService notiService;
+    private final NotificationRepository notificationRepository;
+
     @Override
     public Response placeOrder(OrderRequest orderRequest) {
 
@@ -61,19 +69,35 @@ public class OrderItemServiceImpl implements OrderItemService {
                     return orderItem;
                 }).collect(Collectors.toList());
 
-        //calculate the total price
+        //Tinh tong tien
         BigDecimal totalPrice= orderRequest.getTotalPrice() != null && orderRequest.getTotalPrice().compareTo(BigDecimal.ZERO) >0
                 ? orderRequest.getTotalPrice()
                 :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
 
         //create order entity
+        String orderReference = orderGenerator.generateOrderReference();
+
         Order order=new Order();
         order.setOrderItemList(orderItems);
         order.setTotalPrice(totalPrice);
 
+        order.setOrderReference(orderReference); //Dua vao de gui mail
+
+
         //set the order reference in each orderitem
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         orderRepository.save(order);
+
+
+        //SEND mail xac nhan
+        NotificationDTO notificationDTO = NotificationDTO.builder()
+                .recipient(user.getEmail())
+                .subject("ORDER SUCCESSFULLY")
+                .body(String.format("Order successfully, \n Please process with payment , Thansk!!"))
+                .orderReference(orderReference)
+                .build();
+
+        notiService.sendEmail(notificationDTO);
 
         return Response.builder()
                 .status(200)
