@@ -2,3 +2,4 @@
 /*.txt
 /aws.env
 /backend/src/main/aws.env
+/backend/logs

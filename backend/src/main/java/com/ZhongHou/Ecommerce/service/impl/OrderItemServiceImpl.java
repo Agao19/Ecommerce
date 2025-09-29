@@ -9,6 +9,7 @@ import com.ZhongHou.Ecommerce.entity.OrderItem;
 import com.ZhongHou.Ecommerce.entity.Product;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.OrderStatus;
+import com.ZhongHou.Ecommerce.enums.PaymentStatus;
 import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.NotificationRepository;
@@ -75,25 +76,29 @@ public class OrderItemServiceImpl implements OrderItemService {
                 :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
 
         //create order entity
-        String orderReference = orderGenerator.generateOrderReference();
+        String orderReference = orderGenerator.generateOrderReference(); //tao ma check order
 
         Order order=new Order();
         order.setOrderItemList(orderItems);
         order.setTotalPrice(totalPrice);
+        order.setPaymentStatus(PaymentStatus.PENDING);
 
         order.setOrderReference(orderReference); //Dua vao de gui mail
-
 
         //set the order reference in each orderitem
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
         orderRepository.save(order);
 
 
+        //Xac nhan link thanh toan
+        String paymentLink = "http://localhost:4200/payment/"+orderReference+ "/" +totalPrice;
+
         //SEND mail xac nhan
         NotificationDTO notificationDTO = NotificationDTO.builder()
                 .recipient(user.getEmail())
                 .subject("ORDER SUCCESSFULLY")
-                .body(String.format("Order successfully, \n Please process with payment , Thansk!!"))
+                .body(String.format("Order successfully, \n Please process with payment , \n" +
+                        "link: "+paymentLink))
                 .orderReference(orderReference)
                 .build();
 

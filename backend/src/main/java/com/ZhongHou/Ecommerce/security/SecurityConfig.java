@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/images/**",
-                        "/auth/**","/category/**","/product/**","/order/**")
+                        "/auth/**","/category/**","/product/**","/order/**","/payments/**")
                         .permitAll()
 
                         // Tất cả các request còn lại yêu cầu đăng nhập

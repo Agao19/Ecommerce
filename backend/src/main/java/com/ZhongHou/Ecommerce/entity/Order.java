@@ -1,5 +1,7 @@
 package com.ZhongHou.Ecommerce.entity;
 
+import com.ZhongHou.Ecommerce.enums.OrderStatus;
+import com.ZhongHou.Ecommerce.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -25,6 +27,10 @@ public class Order {
     private final LocalDateTime createdAt=LocalDateTime.now();
 
     private String orderReference;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus paymentStatus;
+
 
 
 }
