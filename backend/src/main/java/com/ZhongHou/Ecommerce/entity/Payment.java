@@ -30,7 +30,7 @@ public class Payment {
     @Enumerated(EnumType.STRING)
     private PaymentGateway paymentGateWay;
 
-    //StripeID
+    //ID chung
     private String transactionId;
 
     private String orderReference;
