@@ -1,11 +1,13 @@
 package com.ZhongHou.Ecommerce.security;
 
+import com.ZhongHou.Ecommerce.service.RedisRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +25,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
+    private final RedisRepository redisRepository;
 
 
 
@@ -36,7 +39,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             UserDetails userDetails=customUserDetailsService.loadUserByUsername(username);
 
-            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails)){
+            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails) && !jwtUtils.isExpired(token)) {
                 log.info("VALID JWT FOR {}", username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
