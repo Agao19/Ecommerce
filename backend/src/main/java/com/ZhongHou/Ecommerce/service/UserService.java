@@ -16,4 +16,6 @@ public interface UserService {
 
     Response getUserInfoAndOrderHistory();
 
+    void logout(String token);
+
 }
