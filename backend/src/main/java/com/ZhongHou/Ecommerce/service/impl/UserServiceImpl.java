@@ -10,7 +10,10 @@ import com.ZhongHou.Ecommerce.exception.NotFoundException;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.UserRepository;
 import com.ZhongHou.Ecommerce.security.JwtUtils;
+import com.ZhongHou.Ecommerce.security.RedisToken;
+import com.ZhongHou.Ecommerce.service.RedisRepository;
 import com.ZhongHou.Ecommerce.service.UserService;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -19,6 +22,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -31,6 +35,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final EntityDtoMapper entityDtoMapper;
+    private final RedisRepository redisRepository;
 
 
     @Override
@@ -79,6 +84,30 @@ public class UserServiceImpl implements UserService {
                 .expirationTime("6 Month")
                 .role(user.getRole().name())
                 .build();
+    }
+
+
+    @Override
+    public void logout(String token){
+        if (token == null) return;
+
+        String jwtId=  jwtUtils.extractClaims(token,Claims::getId);
+        Date issuedTime = jwtUtils.extractClaims(token,Claims::getIssuedAt);
+        Date expirationTime = jwtUtils.extractClaims(token,Claims::getExpiration);
+
+        if (expirationTime.before(new Date())){ // TTL end => kh xu ly token
+            return;
+        }
+
+       //Luu token vao redis
+        RedisToken redisToken  = RedisToken.builder()
+                .jwtId(jwtId)
+                .expiredRedisTime(expirationTime.getTime() - issuedTime.getTime())
+                .build();
+
+        redisRepository.save(redisToken);
+        log.info("logout successfully");
+
     }
 
     @Override
