@@ -49,7 +49,20 @@ public class JwtUtils {
     public String generateRefreshToken(User user){
         return generateRefreshToken(user.getEmail());
     }
-
+    public String generateRefreshToken(String username){
+        long now = System.currentTimeMillis();
+        String jti = UUID.randomUUID().toString();
+        String token = Jwts.builder()
+                .subject(username)
+                .claim("type","refresh")
+                .id(jti)
+                .issuedAt(new Date(now))
+                .expiration(new Date(now + REFRESH_TTL))
+                .signWith(key)
+                .compact();
+        log.debug("Generated refresh token jti={} for {}", jti, username);
+        return token;
+    }
 
     public String generateToken(String username){
         return Jwts.builder()
