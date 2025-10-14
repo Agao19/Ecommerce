@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RedisHash("jwt_blacklist")
+@RedisHash("jwt_whitelist")
 public class RedisToken {
 
     @Id
