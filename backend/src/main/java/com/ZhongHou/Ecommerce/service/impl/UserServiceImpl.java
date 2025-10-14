@@ -38,6 +38,9 @@ public class UserServiceImpl implements UserService {
     private final RedisRepository redisRepository;
 
 
+
+    private static final boolean ROTATE_REFRESH = true;
+
     @Override
     public Response registerUser(UserDto registrationRequest) {
         UserRole role = UserRole.USER;
@@ -75,14 +78,67 @@ public class UserServiceImpl implements UserService {
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
             throw new InvalidCredentialsException("Password does not match");
         }
+
         String token = jwtUtils.generateToken(user);
+        String refreshToken = jwtUtils.generateRefreshToken(user);
+
+        String refreshJti = jwtUtils.getJtiFromRefreshToken(refreshToken);
+        Date refreshExp = jwtUtils.getExpirationTimeFromFreshToken(refreshToken);
+        long refreshTTL = refreshExp.getTime() - System.currentTimeMillis();
+
+
+        //Saving refresh_jwtID vao whitelist
+        RedisToken redisFreshToken  = RedisToken.builder()
+                .jwtId("access"+refreshJti)
+                .expiredRedisTime(refreshTTL)
+                .build();
+
+        redisRepository.save(redisFreshToken);
 
         return Response.builder()
                 .status(200)
                 .message("User Successfully Logged In")
                 .token(token)
+                .refreshToken(refreshToken)
                 .expirationTime("6 Month")
                 .role(user.getRole().name())
+                .build();
+    }
+
+
+    //NEW ACCESSTOKEN
+    @Override
+    public Response sendNewAccessToken(String refreshToken) {
+
+        if(refreshToken == null || refreshToken.isBlank()){
+            throw new InvalidCredentialsException("Please check refresh token");
+        }
+
+        String type = jwtUtils.getType(refreshToken);
+        Date exp = jwtUtils.getExpirationTimeFromFreshToken(refreshToken);
+        String jti = jwtUtils.getJtiFromRefreshToken(refreshToken);
+        String subject  = jwtUtils.getSubjectFromRefreshToken(refreshToken);
+
+
+        boolean whitelisted = redisRepository.findById(jti).isPresent();
+        if (!whitelisted) {
+            throw new InvalidCredentialsException("Refresh token revoked");
+        }
+
+        User user = userRepo.findByEmail(subject)
+                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
+
+        String newAccessToken = jwtUtils.generateToken(user);
+
+        //delete refresh_jwtID khi phat lai access token
+        if (ROTATE_REFRESH) {
+            redisRepository.deleteById(jti);
+        }
+
+        return Response.builder()
+                .status(200)
+                .message("Successfully with new access token")
+                .token(newAccessToken)
                 .build();
     }
 

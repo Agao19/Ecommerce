@@ -10,6 +10,8 @@ public interface UserService {
 
     Response loginUser(LoginRequest loginRequest);
 
+    Response sendNewAccessToken(String refreshToken);
+
     Response getAllUsers();
 
     User getLoginUser();
