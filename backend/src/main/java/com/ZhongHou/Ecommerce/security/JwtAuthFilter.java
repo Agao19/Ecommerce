@@ -25,21 +25,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
-    private final RedisRepository redisRepository;
-
-
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        String token = getTokenFromRequest(request);
+        //pass jwtFilter khi cap accessToken moi
+        String uri =request.getRequestURI();
+        if (uri.startsWith("/auth/refresh")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
+        String token = getAccessTokenFromRequest(request);
         if (token !=null) {
             String username=jwtUtils.getUsernameFromToken(token);
 
             UserDetails userDetails=customUserDetailsService.loadUserByUsername(username);
 
-            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails) && !jwtUtils.isExpired(token)) {
+            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails)) {
                 log.info("VALID JWT FOR {}", username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -54,7 +57,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     //
-    private String getTokenFromRequest(HttpServletRequest request){
+    private String getAccessTokenFromRequest(HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (StringUtils.hasText(token) && StringUtils.startsWithIgnoreCase(token,"Bearer ")){
             return token.substring(7);
