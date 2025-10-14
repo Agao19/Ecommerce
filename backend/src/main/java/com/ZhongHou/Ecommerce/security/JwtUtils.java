@@ -29,7 +29,8 @@ public class JwtUtils {
     private RedisRepository redisRepository;
 
     //private static  final long EXPIRATION_TIME_IN_MILLISEC = 1000L * 60L * 60L * 24L * 30L * 6L; //6months
-    private static final long ACCESS_TTL = 1000L * 60L * 60L * 15L; //15hours
+    //private static final long ACCESS_TTL = 1000L * 60L * 60L * 15L; //15hours
+    private static final long ACCESS_TTL = 1000L * 60L * 15L; //15mins
     private static final long REFRESH_TTL = 1000L * 60L  * 60L * 24L * 30L; // 30days
 
     private SecretKey key;
@@ -42,8 +43,22 @@ public class JwtUtils {
         byte[] keyBytes=secreteJwtString.getBytes(StandardCharsets.UTF_8);
         this.key=new SecretKeySpec(keyBytes,"HmacSHA256");
     }
+
     public String generateToken(User user){
         return generateToken(user.getEmail());
+    }
+
+
+    public String generateToken(String username){
+        String jti = UUID.randomUUID().toString();
+        return Jwts.builder()
+                .subject(username)
+                .claim("type","access")
+                .id(jti) // check for redis
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis()+ACCESS_TTL))
+                .signWith(key)
+                .compact();
     }
 
     public String generateRefreshToken(User user){
@@ -52,7 +67,8 @@ public class JwtUtils {
     public String generateRefreshToken(String username){
         long now = System.currentTimeMillis();
         String jti = UUID.randomUUID().toString();
-        String token = Jwts.builder()
+
+        return Jwts.builder()
                 .subject(username)
                 .claim("type","refresh")
                 .id(jti)
@@ -60,24 +76,20 @@ public class JwtUtils {
                 .expiration(new Date(now + REFRESH_TTL))
                 .signWith(key)
                 .compact();
-        log.debug("Generated refresh token jti={} for {}", jti, username);
-        return token;
-    }
-
-    public String generateToken(String username){
-        return Jwts.builder()
-                .subject(username)
-                .claim("type","access")
-                .id(UUID.randomUUID().toString()) // check for redis
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+ACCESS_TTL))
-                .signWith(key)
-                .compact();
     }
 
     public String getUsernameFromToken(String token){
         return extractClaims(token, Claims::getSubject);
     }
+
+    public String getJtiFromRefreshToken(String refreshToken){
+        return extractClaims(refreshToken, Claims::getId);
+    }
+
+    public Date getExpirationTimeFromFreshToken(String refreshToken){
+        return extractClaims(refreshToken, Claims::getExpiration);
+    }
+
 
     public <T> T extractClaims(String token, Function<Claims,T> claimsTFunction){
         return claimsTFunction.apply(Jwts.parser().verifyWith(key)
@@ -97,8 +109,9 @@ public class JwtUtils {
 
             if (username == null || !username.equals(userDetails.getUsername())) return false;
             if (!"access".equals(type)) return false;
+            //blacklist
             if (redisRepository.findById(jti).isPresent()) return false;
-            if (exp.before(new Date())) return false;
+            if (exp == null || exp.before(new Date())) return false;
             return true;
         }catch (Exception e){
             return false;
@@ -108,16 +121,20 @@ public class JwtUtils {
     }
 
 
+    public String getSubjectFromRefreshToken(String refreshToken){
+        return extractClaims(refreshToken, Claims::getSubject);
+    }
+
+    public String getType(String token) {
+        return extractClaims(token, c -> c.get("type", String.class));
+    }
 
     private boolean isRevoked(String token){
         String jti = extractClaims(token, Claims::getId);
         return redisRepository.findById(jti).isPresent();
     }
 
-    public boolean isExpired(String token){
-        Date exp = extractClaims(token, Claims::getExpiration);
-        return exp.before(new Date());
-    }
+
 
 
 
