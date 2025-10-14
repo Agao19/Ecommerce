@@ -34,4 +34,13 @@ public class AuthController {
         userService.logout(token);
 
     }
+
+    @PostMapping("/refresh")
+    ResponseEntity<Response> newAccessToken(@RequestHeader("Authorization") String authHeader){
+        String refreshToken = authHeader.replace("Bearer ", "");
+        log.info("new accessToken {}", refreshToken);
+
+        return ResponseEntity.ok(userService.sendNewAccessToken(refreshToken));
+
+    }
 }
