@@ -2,3 +2,8 @@
 /*.txt
 /aws.env
 /backend/src/main/aws.env
+/backend/logs/
+/backend/nohup.out
+/backend/.idea/
+
+*.swp
