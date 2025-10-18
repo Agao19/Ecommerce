@@ -12,11 +12,11 @@ import java.util.concurrent.TimeUnit;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@RedisHash("jwt_whitelist")
+@RedisHash("jwt_tokens")
 public class RedisToken {
 
     @Id
-    private String jwtId;
+    private String jwtId; //"refresh:{jti}" or "blacklist:{jti}
 
     @TimeToLive(unit = TimeUnit.MILLISECONDS)
     private Long expiredRedisTime;

@@ -10,7 +10,6 @@ public class EcommerceApplication {
 		
 
 		SpringApplication.run(EcommerceApplication.class, args);
-        System.out.println("Xin chao. hom nay la T7");
 	}
 
 }
