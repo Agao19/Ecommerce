@@ -50,13 +50,14 @@ public class JwtUtils {
 
 
     public String generateToken(String username){
+        long now = System.currentTimeMillis();
         String jti = UUID.randomUUID().toString();
         return Jwts.builder()
                 .subject(username)
                 .claim("type","access")
                 .id(jti) // check for redis
-                .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis()+ACCESS_TTL))
+                .issuedAt(new Date(now))
+                .expiration(new Date(now+ACCESS_TTL))
                 .signWith(key)
                 .compact();
     }
@@ -86,10 +87,23 @@ public class JwtUtils {
         return extractClaims(refreshToken, Claims::getId);
     }
 
+    public String getJtiFromAccessToken(String token) {
+        return extractClaims(token, Claims::getId);
+    }
+
+
     public Date getExpirationTimeFromFreshToken(String refreshToken){
         return extractClaims(refreshToken, Claims::getExpiration);
     }
 
+    public Date getExpirationTimeFromAccessToken(String accessToken){
+        return extractClaims(accessToken, Claims::getExpiration);
+    }
+
+
+    public String getType(String token) {
+        return extractClaims(token, c -> c.get("type", String.class));
+    }
 
     public <T> T extractClaims(String token, Function<Claims,T> claimsTFunction){
         return claimsTFunction.apply(Jwts.parser().verifyWith(key)
@@ -109,8 +123,10 @@ public class JwtUtils {
 
             if (username == null || !username.equals(userDetails.getUsername())) return false;
             if (!"access".equals(type)) return false;
+
             //blacklist
-            if (redisRepository.findById(jti).isPresent()) return false;
+            String blackKey = "blacklist:access:" + jti;
+            if (redisRepository.findById(blackKey).isPresent()) return false;
             if (exp == null || exp.before(new Date())) return false;
             return true;
         }catch (Exception e){
@@ -125,9 +141,6 @@ public class JwtUtils {
         return extractClaims(refreshToken, Claims::getSubject);
     }
 
-    public String getType(String token) {
-        return extractClaims(token, c -> c.get("type", String.class));
-    }
 
     private boolean isRevoked(String token){
         String jti = extractClaims(token, Claims::getId);
