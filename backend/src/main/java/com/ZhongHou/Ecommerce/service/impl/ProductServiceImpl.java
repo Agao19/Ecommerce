@@ -37,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
                         String description, BigDecimal price) {
         Category category= categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
 
-        String productImageUrl=aws.saveImageToS3(image);
+        String productImageUrl=aws.saveImageToLocal(image);
         //String productImageUrlLocal=aws.saveImageToLocal(image);
 
         Product product = new Product();
@@ -124,6 +124,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response getProductsByCategory(Long categoryId) {
+
         List<Product> products = productRepository.findByCategoryId(categoryId);
         if (products.isEmpty()){
             throw new NotFoundException("No products found for this category");

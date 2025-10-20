@@ -21,11 +21,11 @@ public class ProductController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> createProduct(
-            @RequestParam Long categoryId,
-            @RequestParam MultipartFile image,
-            @RequestParam String name,
-            @RequestParam String description,
-            @RequestParam BigDecimal price
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("price") BigDecimal price
     ){
         if (categoryId ==null || image.isEmpty() || name.isEmpty() || description.isEmpty() || price ==null){
             throw new InvalidCredentialsException("All Fields are Required");
@@ -37,12 +37,12 @@ public class ProductController {
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateProduct(
-            @RequestParam Long productId,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) MultipartFile image,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) BigDecimal price
+            @RequestParam (name = "productId")Long productId,
+            @RequestParam(name = "categoryId",required = false) Long categoryId,
+            @RequestParam(name = "image",required = false) MultipartFile image,
+            @RequestParam(name = "name",required = false) String name,
+            @RequestParam(name = "description",required = false) String description,
+            @RequestParam(name = "price",required = false) BigDecimal price
     ){
 
         return ResponseEntity.ok(productService.updateProduct(productId,categoryId,image,name,description,price));
