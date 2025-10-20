@@ -10,10 +10,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Configuration
 public class CrossConfig implements WebMvcConfigurer{
+    private final static Path IMAGE_DIRECTORY_BACKEND = Paths.get(System.getProperty("user.dir"), "product-images");
 
     @Bean
     @Primary
@@ -38,7 +41,10 @@ public class CrossConfig implements WebMvcConfigurer{
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+
+        String imagePathUrl = IMAGE_DIRECTORY_BACKEND.toUri().toString();
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:/D:/Ecommerce/product-images/");
+                //.addResourceLocations("file:/D:/Ecommerce/product-images/")
+                .addResourceLocations("imagePathUrl"); //Backend directory
     }
 }
