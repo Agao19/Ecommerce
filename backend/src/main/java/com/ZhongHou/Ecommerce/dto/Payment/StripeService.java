@@ -64,7 +64,7 @@ public class StripeService {
             payment.setAmount(paymentRequest.getAmount());
             payment.setStatus(PaymentStatus.PENDING);
             payment.setPaymentDate(LocalDateTime.now());
-            payment.setOrderReference(orderReference);
+                payment.setOrderReference(orderReference);
             payment.setTransactionId(intent.getId());
             payment.setUser(order.getOrderItemList()
                     .stream()

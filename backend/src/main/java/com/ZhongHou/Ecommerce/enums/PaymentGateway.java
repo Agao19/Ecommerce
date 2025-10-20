@@ -1,5 +1,5 @@
 package com.ZhongHou.Ecommerce.enums;
 
 public enum PaymentGateway {
-    STRIPE, MOMO
+    STRIPE, MOMO, VNPAY
 }
