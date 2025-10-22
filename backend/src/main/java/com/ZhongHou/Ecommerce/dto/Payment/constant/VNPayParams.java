@@ -3,6 +3,7 @@ package com.ZhongHou.Ecommerce.dto.Payment.constant;
 
 public class VNPayParams {
 
+    //request params
     public static final String SECURE_HASH = "vnp_SecureHash";
     public static final String SECURE_HASH_TYPE = "vnp_SecureHashType";
     public static final String AMOUNT = "vnp_Amount";
@@ -18,4 +19,12 @@ public class VNPayParams {
     public static final String EXPIRE_DATE = "vnp_ExpireDate";
     public static final String IP_ADDRESS = "vnp_IpAddr";
     public static final String LOCALE = "vnp_Locale";
+
+
+    //response params
+    public static final String RESPONSE_CODE = "vnp_ResponseCode";
+    public static final String TRANSACTION_NO = "vnp_TransactionNo"; //Mã giao dịch
+    public static final String TRANSACTION_STATUS = "vnp_TransactionStatus";
+    public static final String BANK_CODE = "vnp_BankCode";
+    public static final String PAY_DATE = "vnp_PayDate";
 }

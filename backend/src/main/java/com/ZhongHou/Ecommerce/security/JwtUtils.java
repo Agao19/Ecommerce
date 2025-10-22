@@ -1,5 +1,6 @@
 package com.ZhongHou.Ecommerce.security;
 
+import com.ZhongHou.Ecommerce.dto.Payment.CryptoService;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.service.RedisRepository;
 import io.jsonwebtoken.Claims;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -23,6 +25,7 @@ import java.util.function.Function;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class JwtUtils {
 
     @Autowired
@@ -33,21 +36,21 @@ public class JwtUtils {
     private static final long ACCESS_TTL = 1000L * 60L * 15L; //15mins
     private static final long REFRESH_TTL = 1000L * 60L  * 60L * 24L * 30L; // 30days
 
+    private final CryptoService cryptoService;
     private SecretKey key;
 
     @Value("${secreteJwtString}")
-    private String secreteJwtString; //gia tri o app propeties phai is 32 ki tu hoac lon hon
+    private String secreteJwtString; //hmacsh256
 
     @PostConstruct
     private void init(){
-        byte[] keyBytes=secreteJwtString.getBytes(StandardCharsets.UTF_8);
-        this.key=new SecretKeySpec(keyBytes,"HmacSHA256");
+       this.key = cryptoService.createKey(secreteJwtString,"HmacSHA256");
     }
+
 
     public String generateToken(User user){
         return generateToken(user.getEmail());
     }
-
 
     public String generateToken(String username){
         long now = System.currentTimeMillis();
