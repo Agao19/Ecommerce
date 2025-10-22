@@ -1,49 +1,1 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
-
-import com.ZhongHou.Ecommerce.exception.BusinessException;
-import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import javax.crypto.Mac;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-
-@Service
-@Slf4j
-public class CryptoService {
-    private final Mac mac = Mac.getInstance("HmacSHA512");
-
-    @Value("${payment.vnpay.secret-key}")
-    private String secretKey;
-
-    public CryptoService() throws NoSuchAlgorithmException {
-    }
-
-    @PostConstruct
-    void init() throws InvalidKeyException {
-        SecretKeySpec secretKeySpec = new SecretKeySpec(secretKey.getBytes(StandardCharsets.UTF_8), "HmacSHA512");
-        mac.init(secretKeySpec);
-    }
-
-
-    public String sign(String data){
-        try{
-            return toHexString(mac.doFinal(data.getBytes(StandardCharsets.UTF_8)));
-        }catch (Exception e){
-            throw new BusinessException("Can not sign data");
-        }
-    }
-
-    //EncodingUtil
-    public static String toHexString(byte[] bytes) {
-        StringBuilder sb = new StringBuilder(bytes.length * 2);
-        for (byte b : bytes) {
-            sb.append(String.format("%02x", b));
-        }
-        return sb.toString();
-    }
-}
+package com.ZhongHou.Ecommerce.dto.Payment;import com.ZhongHou.Ecommerce.exception.BusinessException;import jakarta.annotation.PostConstruct;import lombok.extern.slf4j.Slf4j;import org.springframework.beans.factory.annotation.Value;import org.springframework.stereotype.Service;import javax.crypto.Mac;import javax.crypto.SecretKey;import javax.crypto.spec.SecretKeySpec;import java.nio.charset.StandardCharsets;import java.security.InvalidKeyException;import java.security.NoSuchAlgorithmException;@Service@Slf4jpublic class CryptoService {    public CryptoService() throws NoSuchAlgorithmException {    }    public SecretKeySpec createKey(String secretString, String algorithm){        byte[] keyBytes = secretString.getBytes(StandardCharsets.UTF_8);        return new SecretKeySpec(keyBytes, algorithm);    }    public String sign(String data, SecretKeySpec secretKey, String algorithm){        try {            Mac mac = Mac.getInstance(algorithm);            mac.init(secretKey);            byte[] hashBytes = mac.doFinal(data.getBytes(StandardCharsets.UTF_8));            return toHexString(hashBytes);        }catch (NoSuchAlgorithmException | InvalidKeyException e) {            throw new RuntimeException("Cant sign data with algorithm " + algorithm, e);        }    }    //EncodingUtil    public static String toHexString(byte[] bytes) {  // %02x: rộng 2 kí tự và nếu thiếu thì thêm số 0 vào đa]ng trước        StringBuilder sb = new StringBuilder(bytes.length * 2);        for (byte b : bytes) {            sb.append(String.format("%02x", b));        }        return sb.toString();    }}

@@ -3,7 +3,7 @@ package com.ZhongHou.Ecommerce.dto.Payment.constant;
 import com.ZhongHou.Ecommerce.dto.Response;
 
 public class VnpIpnResponseConst {
-
+    // xử lý retry ipn (server to server )
     public static final IpnResponse SUCCESS = new IpnResponse("00","Successful");
     public static final IpnResponse SIGNATURE_FAILED = new IpnResponse("97", "Signature failed");
     public static final IpnResponse ORDER_NOT_FOUND = new IpnResponse("01", "Order not found");

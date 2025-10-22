@@ -3,10 +3,14 @@ package com.ZhongHou.Ecommerce.dto.Payment;
 import com.ZhongHou.Ecommerce.dto.Payment.constant.Locale;
 import com.ZhongHou.Ecommerce.dto.Payment.constant.VNPayParams;
 import com.ZhongHou.Ecommerce.dto.Response;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
@@ -22,7 +26,7 @@ public class VNPayService  implements PaymentService{
     public static final String VERSION = "2.1.0"; //version api vnpay
     public static final String COMMAND = "pay"; //api thanh toan
     public static final String ORDER_TYPE = "190000"; // ma danh muc hang hoa cua VNPAY
-    public static final long DEFAULT_MULTIPLIER = 100L; //vnpay phai * 100L
+    public static final long DEFAULT_MULTIPLIER = 100L; //vnpay phai * 100L de loai bo phan thap phan
 
     @Value("${payment.vnpay.tmn-code}")
     private String tmnCode; //ma web
@@ -37,6 +41,16 @@ public class VNPayService  implements PaymentService{
     private Integer paymentTimeout;
 
     private final CryptoService cryptoService;
+
+    @Value("${payment.vnpay.secret-key}")
+    private String secretKey;
+    private SecretKeySpec vnpayKey;
+
+    @PostConstruct
+    void init() {
+        this.vnpayKey = cryptoService.createKey(secretKey, "HmacSHA512");
+    }
+
 
     SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 
@@ -103,11 +117,15 @@ public class VNPayService  implements PaymentService{
 
     //Kiểm tra chữ ký khi nhận về IPN
     public boolean verifyIpn(Map<String, String> params) throws UnsupportedEncodingException {
+       
         var reqSecureHash = params.get(VNPayParams.SECURE_HASH);
+       
+        //Loại bỏ chữ ký cũ. vì chữ ký mới sẽ được tạo từ các tham số khác nhận về từ IPN url
         params.remove(VNPayParams.SECURE_HASH);
         params.remove(VNPayParams.SECURE_HASH_TYPE);
 
         var hashPayload = new StringBuilder();
+
         var fieldNames = new ArrayList<>(params.keySet());
         Collections.sort(fieldNames);
 
@@ -117,7 +135,7 @@ public class VNPayService  implements PaymentService{
             var fieldValue = params.get(fieldName);
             if ((fieldValue != null) && (!fieldValue.isEmpty())) {
 
-                //Build hash data
+                //Build hash data from IPN url 
                 hashPayload.append(fieldName);
                 hashPayload.append("=");
                 hashPayload.append(URLEncoder.encode(fieldValue,  StandardCharsets.US_ASCII.toString()));
@@ -127,10 +145,11 @@ public class VNPayService  implements PaymentService{
                 }
             }
         }
+        
+        //Tạo chữ ký mới từ các tham số khác nhận về từ IPN url
+        var secureHash = cryptoService.sign(hashPayload.toString(),vnpayKey,"HmacSHA512"); //sign hash payload
 
-        var secureHash = cryptoService.sign(hashPayload.toString());
-
-        return secureHash.equals(reqSecureHash);
+        return secureHash.equals(reqSecureHash); //so sánh chữ ký mới từ VNPAY
     }
 
 
@@ -182,7 +201,7 @@ public class VNPayService  implements PaymentService{
         }
 
         //Build secureHash
-        var secureHash = cryptoService.sign(hashPayload.toString());
+        var secureHash = cryptoService.sign(hashPayload.toString(), vnpayKey,"HmacSHA512");
 
         //finalize Query
         query.append("&vnp_SecureHash=");

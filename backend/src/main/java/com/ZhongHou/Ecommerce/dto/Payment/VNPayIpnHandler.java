@@ -5,6 +5,7 @@ import com.ZhongHou.Ecommerce.dto.Payment.constant.VNPayParams;
 import com.ZhongHou.Ecommerce.dto.Payment.constant.VnpIpnResponseConst;
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.OrderReference;
+import com.ZhongHou.Ecommerce.enums.PaymentStatus;
 import com.ZhongHou.Ecommerce.exception.BusinessException;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
 import com.ZhongHou.Ecommerce.service.OrderReferenceRepository;
@@ -34,6 +35,9 @@ public class VNPayIpnHandler implements IpnHandler {
 
         try {
             var txnRef=params.get(VNPayParams.TXN_REF);
+            var responseCode = params.get(VNPayParams.RESPONSE_CODE);
+            var transactionStatus = params.get(VNPayParams.TRANSACTION_NO);
+            var bankCode = params.get(VNPayParams.BANK_CODE);
             Optional<Order> orderIdOptional  = orderRepository.findByOrderReference(txnRef);
 
             if (orderIdOptional.isEmpty()) {
@@ -43,7 +47,14 @@ public class VNPayIpnHandler implements IpnHandler {
 
             log.info("VNPay IPN: Successfully processed TxnRef: {}", txnRef);
             Order orderId=orderIdOptional.get();
-
+            if(!"00".equals(responseCode)) {
+                orderId.setPaymentStatus(PaymentStatus.FAILED);
+                log.info("VNPay IPN: Payment successful for TxnRef: {}, BankCode: {}",
+                    txnRef, bankCode);
+            }else{
+                orderId.setPaymentStatus(PaymentStatus.COMPLETED);
+            }
+            orderRepository.save(orderId);
             return VnpIpnResponseConst.SUCCESS;
 
 

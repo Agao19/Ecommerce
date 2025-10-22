@@ -6,6 +6,7 @@ import lombok.*;
 @Getter
 @Setter
 public class IpnResponse {
+    
     @JsonProperty("RspCode")
     private String responseCode;
 
