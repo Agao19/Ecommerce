@@ -1,0 +1,84 @@
+server:
+  port: 8080
+
+spring:
+  application:
+      name: Ecommerce
+#Connect DB
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+    jpa:
+      hibernate:
+        ddl-auto: update
+
+#Mail Sender
+  mail:
+      host: smtp.gmail.com
+      port: 587
+      username: hauvt108.usec@gmail.com
+      password: sfsu iqrc avjf lvlj
+      protocol: smtp
+
+      properties:
+                mail:
+                    smtp:
+                        auth: true
+                        starttls:
+                            enable: true
+                            required: true
+
+secreteJwtString: zhonghou123456789zhonghou123456789
+
+#AWS connect
+#server.port=8080
+#server.address=0.0.0.0
+#spring.datasource.url=jdbc:mysql://ecommerce1.ch6w0cw4asti.ap-southeast-1.rds.amazonaws.com:3306/ecomdb
+#spring.datasource.username=admin
+#spring.datasource.password=Trunghau123
+#spring.jpa.hibernate.ddl-auto=update
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# AWS S3 Configuration
+aws:
+  s3:
+    access: ${AWS_ACCESS_KEY}
+    secret: ${AWS_SECRET_KEY}
+
+#STRIPE PAYMENT
+stripe:
+  api:
+    public:
+          key: pk_test_51SCESbECx3GHV8TVnNsdimVPDESpYb6xvoZoR1o9tntYSVEMhfesVHeds6OVQXcRTfjI6nf8z9e2yGynysyIyzUS00Oj5FeHbQ
+    secret:
+          key: sk_test_51SCESbECx3GHV8TVveqy52GWKHA48tCTqDJCQ27u2IUcqnzArKW2lWsLssrYn2xeHnfRRZHfCg5McmJhWpPrTtlk00aT9Qzqa4
+
+## VNPAY
+payment:
+        vnpay:
+          tmn-code:  58X4B4HP
+          secret-key: ${VNPAY_SECRET_KEY}
+          init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+          return-url: https://ecommerce.zhonghouaws.click/home
+          timeout: 15 # in minutes
+
+
+#MOMO PAYMENT
+#momo.partnerCode=MOMO
+#momo.accessKey=${ACCESS_KEY_MOMO}
+#momo.secretKey=${SECRET_KEY_MOMO}
+#momo.endpoint=https://test-payment.momo.vn/v2/gateway/api/create
+#momo.returnUrl=https://oboeru.me/payment/return
+#momo.notifyUrl=https://oboeru.me/api/payment/momo-notify
+
+
+
+
+#Logg
+#logging:
+#  file:
+#    name: logs/app.log
+#  level:
+#    root: INFO
