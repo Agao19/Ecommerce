@@ -25,6 +25,7 @@ public class CrossConfig implements WebMvcConfigurer{
         // Thêm các origin cụ thể (không dùng "*") khi dùng credentials
         configuration.setAllowedOrigins(List.of(
                 "https://ecommerce.zhonghouaws.click",
+                "https://exertive-barbar-interpenetratively.ngrok-free.dev",
                 "http://localhost:4200"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));

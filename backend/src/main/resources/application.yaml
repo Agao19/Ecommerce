@@ -61,7 +61,7 @@ payment:
           tmn-code:  58X4B4HP
           secret-key: ${VNPAY_SECRET_KEY}
           init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
-          return-url: https://ecommerce.zhonghouaws.click/home
+          return-url: https://exertive-barbar-interpenetratively.ngrok-free.dev/payments/vnpay_return
           timeout: 15 # in minutes
 
 
