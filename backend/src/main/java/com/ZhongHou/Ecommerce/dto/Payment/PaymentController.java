@@ -1,27 +1,34 @@
 package com.ZhongHou.Ecommerce.dto.Payment;
 
-import com.ZhongHou.Ecommerce.entity.StripePayment;
+import com.ZhongHou.Ecommerce.dto.Payment.constant.IpnResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 @RestController
  @RequiredArgsConstructor
  @RequestMapping("/payments")
+@Slf4j
 public class PaymentController {
 
    // private final PaymentService paymentService;
     private final StripeService stripeService;
-
+    private final IpnHandler ipnHandler;
     @PostMapping("/pay")
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentRequest paymentRequest){
         return ResponseEntity.ok(stripeService.createPaymentIntent(paymentRequest));
+    }
+
+
+    @GetMapping("/vnpay_ipn") // nhận
+    IpnResponse processIpn(@RequestParam Map<String, String> params) throws UnsupportedEncodingException {
+        log.info("[VNPay Ipn] Params: {}", params);
+        return ipnHandler.process(params);
     }
 
 
