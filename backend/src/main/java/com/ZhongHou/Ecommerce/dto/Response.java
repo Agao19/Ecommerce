@@ -40,4 +40,10 @@ public class Response {
 
     private OrderDto order;
     private List<UserDto> orderList;
+
+
+
+    //InitPaymentResponse
+    private String vnpUrl;
+
 }

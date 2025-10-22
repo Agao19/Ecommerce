@@ -28,7 +28,7 @@ public class RecommendationService {
 
     public Response getSimilarProducts(Long productId) {
 
-        // Tạo key giống hệt script Python
+        // Tạo key giống script Python
         String key = "product:" + productId + ":similar";
 
         try {

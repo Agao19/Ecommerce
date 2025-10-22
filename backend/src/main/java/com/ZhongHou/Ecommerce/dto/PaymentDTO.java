@@ -27,15 +27,15 @@ public class PaymentDTO {
 
     private BigDecimal amount;
 
-    private PaymentGateway paymentMethod; //e,g Paypal. Stripe,momo
+    private PaymentGateway paymentMethod;
 
     private LocalDateTime paymentDate;
 
-    private PaymentStatus status; //failed, e.t.c
+    private PaymentStatus status;
 
     private String orderReference;
     private String failureReason;
 
-    private String approvalLink; //paypal payment approval UEL
+    private String approvalLink;
 
 }

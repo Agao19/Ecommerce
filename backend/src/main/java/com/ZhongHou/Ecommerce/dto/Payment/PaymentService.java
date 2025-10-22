@@ -1,15 +1,14 @@
-//package com.ZhongHou.Ecommerce.dto.Payment;
-//
-//import lombok.RequiredArgsConstructor;
-//import lombok.extern.slf4j.Slf4j;
-//import org.springframework.stereotype.Service;
-//import java.util.Map;
-//
-//@Service
-//@RequiredArgsConstructor
-//@Slf4j
-//public class PaymentService {
-//
+package com.ZhongHou.Ecommerce.dto.Payment;
+
+import com.ZhongHou.Ecommerce.dto.Response;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import java.util.Map;
+
+
+public interface PaymentService {
+
 //    private  MomoService momoService;
 //    private  StripeService stripeService;
 //
@@ -33,4 +32,7 @@
 //                throw new IllegalArgumentException("Unsupported gateway: " + request.getPaymentGateway());
 //        }
 //    }
-//}
+
+Response createVNPaymentIntent(PaymentRequest paymentRequest);
+
+}
