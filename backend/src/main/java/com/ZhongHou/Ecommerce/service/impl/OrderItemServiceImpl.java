@@ -1,6 +1,4 @@
 package com.ZhongHou.Ecommerce.service.impl;
-
-import com.ZhongHou.Ecommerce.dto.NotificationDTO;
 import com.ZhongHou.Ecommerce.dto.OrderItemDto;
 import com.ZhongHou.Ecommerce.dto.OrderRequest;
 import com.ZhongHou.Ecommerce.dto.Response;
@@ -50,7 +48,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final NotificationRepository notificationRepository;
 
     @Override
-    public Response placeOrder(OrderRequest orderRequest) {
+    public Order placeOrder(OrderRequest orderRequest) {
 
         User user = userService.getLoginUser();
 
@@ -73,11 +71,12 @@ public class OrderItemServiceImpl implements OrderItemService {
         //Tinh tong tien
         BigDecimal totalPrice= orderRequest.getTotalPrice() != null && orderRequest.getTotalPrice().compareTo(BigDecimal.ZERO) >0
                 ? orderRequest.getTotalPrice()
-                :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+                : orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
 
-        //create order entity
+
         String orderReference = orderGenerator.generateOrderReference(); //tao ma check order
 
+        //create order entity
         Order order=new Order();
         order.setOrderItemList(orderItems);
         order.setTotalPrice(totalPrice);
@@ -87,27 +86,24 @@ public class OrderItemServiceImpl implements OrderItemService {
 
         //set the order reference in each orderitem
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
-        orderRepository.save(order);
+         orderRepository.save(order);
 
+//
+//        //Xac nhan link thanh toan
+//        String paymentLink = "http://localhost:4200/payment/"+orderReference+ "/" +totalPrice;
+//
+//        //SEND mail xac nhan
+//        NotificationDTO notificationDTO = NotificationDTO.builder()
+//                .recipient(user.getEmail())
+//                .subject("ORDER SUCCESSFULLY")
+//                .body(String.format("Order successfully, \n Please process with payment , \n" +
+//                        "link: "+paymentLink))
+//                .orderReference(orderReference)
+//                .build();
+//
+//        notiService.sendEmail(notificationDTO);
 
-        //Xac nhan link thanh toan
-        String paymentLink = "http://localhost:4200/payment/"+orderReference+ "/" +totalPrice;
-
-        //SEND mail xac nhan
-        NotificationDTO notificationDTO = NotificationDTO.builder()
-                .recipient(user.getEmail())
-                .subject("ORDER SUCCESSFULLY")
-                .body(String.format("Order successfully, \n Please process with payment , \n" +
-                        "link: "+paymentLink))
-                .orderReference(orderReference)
-                .build();
-
-        notiService.sendEmail(notificationDTO);
-
-        return Response.builder()
-                .status(200)
-                .message("Order was successfully placed")
-                .build();
+        return order;
     }
 
     @Override
