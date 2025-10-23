@@ -40,6 +40,7 @@ public class AuthController {
                 .maxAge(result.getExpirationTime())
                 .sameSite("Strict") // hoặc "Lax"/"None" nếu cần cross-site with credentials
                 .build();
+
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok(Response.builder()
