@@ -1,1 +1,6 @@
-.env 
+.env
+*.out
+/product-images/
+/logs/
+*/.idea/
+*/.mvn/ 
