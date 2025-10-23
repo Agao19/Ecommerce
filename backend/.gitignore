@@ -3,4 +3,4 @@
 /product-images/
 /logs/
 */.idea/
-*/.mvn/ 
+*/.mvn/wrapper 
