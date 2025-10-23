@@ -5,5 +5,5 @@
 /backend/logs/
 /backend/nohup.out
 /backend/.idea/
-
+/backend/.mvn/
 *.swp
