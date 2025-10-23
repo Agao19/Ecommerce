@@ -29,6 +29,13 @@ spring:
                         starttls:
                             enable: true
                             required: true
+#Caching storage
+  cache:
+    type: redis
+    redis:
+      time-to-live: 5m #TTL
+
+
 
 secreteJwtString: zhonghou123456789zhonghou123456789
 
