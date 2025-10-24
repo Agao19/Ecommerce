@@ -47,7 +47,11 @@ secreteJwtString: zhonghou123456789zhonghou123456789
 #spring.datasource.password=Trunghau123
 #spring.jpa.hibernate.ddl-auto=update
 #spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
+logging:
+  level:
+    org.springframework.web.socket: DEBUG
+    org.springframework.messaging: DEBUG
+    org.apache.tomcat.websocket: DEBUG
 # AWS S3 Configuration
 aws:
   s3:

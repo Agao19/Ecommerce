@@ -1,28 +1,24 @@
 package com.ZhongHou.Ecommerce.dto.Payment;
-
 import com.ZhongHou.Ecommerce.dto.Payment.constant.IpnResponse;
-import com.ZhongHou.Ecommerce.dto.Payment.constant.VnpIpnResponseConst;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController
- @RequiredArgsConstructor
- @RequestMapping("/payments")
-@Slf4j
+@RequiredArgsConstructor
+@RequestMapping("/payments")
 public class PaymentController {
 
+    //private final VnPayAsyncService vnPayAsyncService;
    // private final PaymentService paymentService;
+
     private final StripeService stripeService;
     private final IpnHandler ipnHandler;
+
     @PostMapping("/pay")
     public ResponseEntity<String> createPaymentIntent(@RequestBody PaymentRequest paymentRequest){
         return ResponseEntity.ok(stripeService.createPaymentIntent(paymentRequest));
@@ -34,7 +30,7 @@ public class PaymentController {
         return ipnHandler.process(params);
     }
 
-    //test return url
+
     @GetMapping("/vnpay_return")
     public void processIpntestReturnUrl(@RequestParam Map<String, String> params, HttpServletResponse response) throws IOException {
         IpnResponse res = ipnHandler.process(params);
@@ -46,9 +42,24 @@ public class PaymentController {
             String frontendUrl = "abc";
             response.sendRedirect(frontendUrl);
         }
-        log.info("[VNPay Ipn Test] Params: {}", params);
     }
 
+
+
+//
+//    //test return url with WEBSOCKET
+//    @GetMapping("/vnpay_return")
+//    public RedirectView processIpntestReturnUrl(@RequestParam Map<String, String> params) throws IOException {
+//
+//        String vnp_ResponseCode = params.get("vnp_ResponseCode");
+//        String vnp_TxnRef = params.get("vnp_TxnRef");
+//        vnPayAsyncService.processPayment(params);
+//        String frontendUrl = "http://localhost:4200/payments";
+//        String redirectUrlWithParams = String.format("%s?orderId=%s&responseCode=%s",
+//                frontendUrl, vnp_TxnRef, vnp_ResponseCode);
+//
+//        return new RedirectView(redirectUrlWithParams);
+//    }
 
 
 //     @PostMapping("/stripe")
@@ -61,14 +72,5 @@ public class PaymentController {
 //        return ResponseEntity.ok(paymentService.initiate(paymentRequest));
 //    }
 
-
-
-//    @PostMapping("/initiate")
-//    public ResponseEntity<?> initiate(@Valid @RequestBody PaymentRequest paymentRequest) throws Exception {
-//        if (paymentRequest.getPaymentGateway() == null) {
-//            return ResponseEntity.badRequest().body(Map.of("error", "paymentGateway is required"));
-//        }
-//        return ResponseEntity.ok(paymentService.initiate(paymentRequest));
-//    }
 
 }

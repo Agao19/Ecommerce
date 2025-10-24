@@ -33,7 +33,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         //pass jwtFilter khi cap accessToken moi
         String uri =request.getRequestURI();
-        if (uri.startsWith("/auth/refresh")) {
+
+        if (uri.startsWith("/auth/refresh") || uri.startsWith("/ws-payment")) {
             filterChain.doFilter(request, response);
             return;
         }

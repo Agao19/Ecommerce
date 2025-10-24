@@ -35,12 +35,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity,
     CorsConfigurationSource corsConfigurationSource) throws Exception{
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
                 //.cors(Customizer.withDefaults())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/images/**",
-                        "/auth/**","/category/**","/product/**","/order/**","/payments/**")
+                        "/auth/**","/category/**","/product/**","/order/**","/payments/**","/ws-payment/**")
                         .permitAll()
 
                         // Tất cả các request còn lại yêu cầu đăng nhập
