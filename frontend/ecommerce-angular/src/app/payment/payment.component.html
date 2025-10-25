@@ -1,0 +1,41 @@
+<div class="payment-container">
+    <!-- Processing State -->
+    <div *ngIf="isProcessing" class="payment-card processing-state">
+        <div class="payment-icon">⏳</div>
+        <h2>Đang xử lý thanh toán
+            <span class="loading-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+            </span>
+        </h2>
+        <p>Vui lòng không tắt trình duyệt trong khi chúng tôi đang xử lý giao dịch của bạn.</p>
+        <div class="order-badge">Mã đơn hàng: {{ orderId }}</div>
+    </div>
+
+    <!-- Success State -->
+    <div *ngIf="!isProcessing && status === 'SUCCESS'" class="payment-card success-state">
+        <div class="payment-icon">✅</div>
+        <h2>Thanh toán thành công!</h2>
+        <p>Cảm ơn bạn đã tin tưởng chúng tôi. Đơn hàng của bạn đã được xác nhận và đang được xử lý.</p>
+        <div class="order-badge">Mã đơn hàng: {{ orderId }}</div>
+        <p style="margin-top: 20px; font-size: 14px;">
+            Bạn sẽ nhận được email xác nhận trong giây lát.
+        </p>
+    </div>
+
+    <!-- Failed State -->
+    <div *ngIf="!isProcessing && status === 'FAILED'" class="payment-card failed-state">
+        <div class="payment-icon">❌</div>
+        <h2>Thanh toán thất bại</h2>
+        <p>Rất tiếc, giao dịch của bạn không thể hoàn tất. Vui lòng thử lại hoặc liên hệ hỗ trợ.</p>
+        <div class="order-badge">Mã đơn hàng: {{ orderId }}</div>
+        <div class="error-code" *ngIf="initialCode">Error Code: {{ initialCode }}</div>
+    </div>
+</div>
+
+<!-- WebSocket Status Indicator (for testing) -->
+<div class="ws-status" *ngIf="isProcessing">
+    <div class="ws-status-dot"></div>
+    <span>WebSocket Connected</span>
+</div>

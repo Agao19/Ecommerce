@@ -1,0 +1,283 @@
+/* Container chính cho payment page */
+.payment-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    padding: 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Card chứa nội dung */
+.payment-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    padding: 40px;
+    max-width: 500px;
+    width: 100%;
+    text-align: center;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Icon container */
+.payment-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Processing state */
+.processing .payment-icon {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Heading styles */
+.payment-card h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    color: #2d3748;
+}
+
+.payment-card p {
+    font-size: 16px;
+    color: #718096;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+/* Order ID badge */
+.order-badge {
+    display: inline-block;
+    background: #edf2f7;
+    color: #2d3748;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+/* Success state */
+.success-state {
+    border-top: 4px solid #48bb78;
+}
+
+.success-state h2 {
+    color: #48bb78;
+}
+
+.success-state .payment-icon {
+    color: #48bb78;
+    animation: scaleIn 0.6s ease-out;
+}
+
+/* Failed state */
+.failed-state {
+    border-top: 4px solid #f56565;
+}
+
+.failed-state h2 {
+    color: #f56565;
+}
+
+.failed-state .payment-icon {
+    color: #f56565;
+    animation: shake 0.5s ease-out;
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-10px);
+    }
+
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        transform: scale(0);
+    }
+
+    to {
+        transform: scale(1);
+    }
+}
+
+/* Processing state */
+.processing-state {
+    border-top: 4px solid #4299e1;
+}
+
+.processing-state h2 {
+    color: #4299e1;
+}
+
+.processing-state .payment-icon {
+    color: #4299e1;
+}
+
+/* Loading dots animation */
+.loading-dots {
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.loading-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #4299e1;
+    margin: 0 3px;
+    animation: loadingDot 1.4s infinite ease-in-out both;
+}
+
+.loading-dots span:nth-child(1) {
+    animation-delay: -0.32s;
+}
+
+.loading-dots span:nth-child(2) {
+    animation-delay: -0.16s;
+}
+
+@keyframes loadingDot {
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+        opacity: 0.5;
+    }
+
+    40% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Code badge for error */
+.error-code {
+    display: inline-block;
+    background: #fed7d7;
+    color: #c53030;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 8px;
+}
+
+/* Action button (optional for future use) */
+.action-button {
+    margin-top: 24px;
+    padding: 12px 32px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.action-button:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* WebSocket status indicator */
+.ws-status {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: white;
+    padding: 10px 16px;
+    border-radius: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ws-status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #48bb78;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .payment-card {
+        padding: 30px 20px;
+    }
+
+    .payment-card h2 {
+        font-size: 24px;
+    }
+
+    .payment-icon {
+        font-size: 60px;
+    }
+}
