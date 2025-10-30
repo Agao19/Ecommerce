@@ -1,10 +1,11 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.Payment;
 import com.ZhongHou.Ecommerce.enums.PaymentGateway;
 import com.ZhongHou.Ecommerce.enums.PaymentStatus;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
 import com.ZhongHou.Ecommerce.repository.PaymentRepository;
 import com.ZhongHou.Ecommerce.service.impl.NotiService;
@@ -39,14 +40,14 @@ public class StripeService {
         String orderReference = paymentRequest.getOrderReference();
 
         Order order =orderRepository.findByOrderReference(orderReference)
-                .orElseThrow(()-> new NotFoundException("Item not found"));
+                .orElseThrow(()-> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         if (order.getPaymentStatus() == PaymentStatus.COMPLETED){
-            throw new NotFoundException("Completed Payment");
+            throw new AppException(ErrorCode.SERVICE_COMPLETED);
         }
 
         if (order.getTotalPrice().compareTo(paymentRequest.getAmount()) != 0) {
-            throw new NotFoundException("Payment Amount doesnt map. Please contact our customer support agent ");
+            throw new RuntimeException("Payment Amount doesnt map. Please contact our customer support agent");
         }
 
         try{
@@ -68,7 +69,7 @@ public class StripeService {
             payment.setTransactionId(intent.getId());
             payment.setUser(order.getOrderItemList()
                     .stream()
-                    .findFirst().orElseThrow(() -> new IllegalArgumentException("User dont have items")).getUser());
+                    .findFirst().orElseThrow(() -> new RuntimeException("User dont have items")).getUser());
 
             paymentRepository.save(payment);
 
@@ -82,9 +83,8 @@ public class StripeService {
 
 
         }catch (Exception e){
-//            throw new RuntimeException("Error creating payment unique transaction id");
             log.error("Stripe error", e);
-            throw new RuntimeException("Payment failed: " + e.getMessage(), e);
+            throw new AppException(ErrorCode.SERVICE_CANCEL);
         }
     }
 

@@ -1,10 +1,6 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
-import com.ZhongHou.Ecommerce.dto.Response;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import java.util.Map;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 
 
 public interface PaymentService {

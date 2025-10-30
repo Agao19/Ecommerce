@@ -1,14 +1,12 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
-import com.ZhongHou.Ecommerce.dto.Payment.constant.IpnResponse;
-import com.ZhongHou.Ecommerce.dto.Payment.constant.VNPayParams;
-import com.ZhongHou.Ecommerce.dto.Payment.constant.VnpIpnResponseConst;
+import com.ZhongHou.Ecommerce.Payment.constant.IpnResponse;
+import com.ZhongHou.Ecommerce.Payment.constant.VNPayParams;
+import com.ZhongHou.Ecommerce.Payment.constant.VnpIpnResponseConst;
 import com.ZhongHou.Ecommerce.entity.Order;
-import com.ZhongHou.Ecommerce.entity.OrderReference;
 import com.ZhongHou.Ecommerce.enums.PaymentStatus;
 import com.ZhongHou.Ecommerce.exception.BusinessException;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
-import com.ZhongHou.Ecommerce.service.OrderReferenceRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

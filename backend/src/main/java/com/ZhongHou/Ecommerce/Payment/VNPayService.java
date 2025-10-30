@@ -1,15 +1,14 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
-import com.ZhongHou.Ecommerce.dto.Payment.constant.Locale;
-import com.ZhongHou.Ecommerce.dto.Payment.constant.VNPayParams;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.Payment.constant.Locale;
+import com.ZhongHou.Ecommerce.Payment.constant.VNPayParams;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;

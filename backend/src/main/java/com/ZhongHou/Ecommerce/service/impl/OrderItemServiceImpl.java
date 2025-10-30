@@ -1,14 +1,15 @@
 package com.ZhongHou.Ecommerce.service.impl;
 import com.ZhongHou.Ecommerce.dto.OrderItemDto;
 import com.ZhongHou.Ecommerce.dto.OrderRequest;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.OrderItem;
 import com.ZhongHou.Ecommerce.entity.Product;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.OrderStatus;
 import com.ZhongHou.Ecommerce.enums.PaymentStatus;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.NotificationRepository;
 import com.ZhongHou.Ecommerce.repository.OrderItemRepository;
@@ -57,7 +58,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .stream()
                 .map(orderItemRequest -> {
                     Product product=productRepository.findById(orderItemRequest.getProductId())
-                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                            .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
                     OrderItem orderItem=new OrderItem();
                     orderItem.setProduct(product);
@@ -109,7 +110,7 @@ public class OrderItemServiceImpl implements OrderItemService {
     @Override
     public Response updateOrderItemStatus(Long orderItemId, String status) {
         OrderItem orderItem=orderItemRepository.findById(orderItemId)
-                .orElseThrow(()->new NotFoundException("Order item not found"));
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         orderItem.setStatus(OrderStatus.valueOf(status.toUpperCase()));
         orderItemRepository.save(orderItem);
@@ -135,7 +136,7 @@ public class OrderItemServiceImpl implements OrderItemService {
         Page<OrderItem> orderItemPage=orderItemRepository.findAll(spec,pageable);
                                                                 
         if (orderItemPage.isEmpty()){
-            throw new NotFoundException("No order found");
+            throw new AppException(ErrorCode.PRODUCT_NOT_EXISTED);
         }
         List<OrderItemDto> orderItemDtos=orderItemPage.getContent().stream()
                 .map(entityDtoMapper::mapOrderItemToDtoPlusProductAndUser)

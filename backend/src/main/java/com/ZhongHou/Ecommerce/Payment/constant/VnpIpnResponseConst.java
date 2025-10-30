@@ -1,6 +1,4 @@
-package com.ZhongHou.Ecommerce.dto.Payment.constant;
-
-import com.ZhongHou.Ecommerce.dto.Response;
+package com.ZhongHou.Ecommerce.Payment.constant;
 
 public class VnpIpnResponseConst {
     // xử lý retry ipn (server to server )

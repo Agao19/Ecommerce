@@ -1,6 +1,6 @@
 package com.ZhongHou.Ecommerce.security;
 
-import com.ZhongHou.Ecommerce.dto.Payment.CryptoService;
+import com.ZhongHou.Ecommerce.Payment.CryptoService;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.service.RedisRepository;
 import io.jsonwebtoken.Claims;
@@ -12,14 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PostMapping;
 
-import javax.crypto.Mac;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 

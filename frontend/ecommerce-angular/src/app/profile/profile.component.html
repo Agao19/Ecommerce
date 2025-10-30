@@ -49,3 +49,158 @@
         </div>
     </ng-template>
 </div>
+
+
+<!-- ✅ PASSWORD CREATION MODAL (hiển thị khi user chưa có password) -->
+<div class="password-modal-overlay" *ngIf="showPasswordForm">
+    <div class="password-modal">
+        <div class="modal-header">
+            <h2>🔐 Create Your Password</h2>
+            <button class="close-btn" (click)="closePasswordForm()" [disabled]="isSubmittingPassword">
+                ✕
+            </button>
+        </div>
+
+        <div class="modal-body">
+            <p class="info-text">
+                <strong>Welcome!</strong> You logged in with Google.
+                Create a password to enable email/password login for future access.
+            </p>
+
+            <form (ngSubmit)="createPassword()" #passwordForm="ngForm">
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" [(ngModel)]="passwordFormData.password"
+                        placeholder="Enter password (min 8 characters)" required minlength="8"
+                        [disabled]="isSubmittingPassword" />
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword"
+                        [(ngModel)]="passwordFormData.confirmPassword" placeholder="Confirm password" required
+                        [disabled]="isSubmittingPassword" />
+                </div>
+
+                <!-- Error message -->
+                <div class="alert alert-error" *ngIf="passwordError">
+                    ⚠️ {{ passwordError }}
+                </div>
+
+                <!-- Success message -->
+                <div class="alert alert-success" *ngIf="passwordSuccess">
+                    ✅ {{ passwordSuccess }}
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary"
+                        [disabled]="isSubmittingPassword || !passwordForm.form.valid">
+                        <span *ngIf="!isSubmittingPassword">Create Password</span>
+                        <span *ngIf="isSubmittingPassword">Creating...</span>
+                    </button>
+
+                    <button type="button" class="btn-secondary" (click)="closePasswordForm()"
+                        [disabled]="isSubmittingPassword">
+                        Skip for now
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- ✅ EXISTING PROFILE CONTENT -->
+<div class="profile-container">
+
+    <!-- Error message -->
+    <div class="alert alert-error" *ngIf="error">
+        {{ error }}
+    </div>
+
+    <!-- Loading state -->
+    <div class="loading" *ngIf="!userInfo && !error">
+        Loading user information...
+    </div>
+
+    <!-- User Info -->
+    <div class="user-info-section" *ngIf="userInfo">
+
+        <!-- Header with password status indicator -->
+        <div class="profile-header">
+            <h2>My Profile</h2>
+            <span class="password-badge" *ngIf="userInfo.noPassword">
+                🔓 No Password Set
+            </span>
+            <span class="password-badge password-set" *ngIf="!userInfo.noPassword">
+                🔐 Password Protected
+            </span>
+        </div>
+
+        <!-- User Details -->
+        <div class="user-details">
+            <div class="detail-item">
+                <strong>Name:</strong>
+                <span>{{ userInfo.name }}</span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Email:</strong>
+                <span>{{ userInfo.email }}</span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Phone:</strong>
+                <span>{{ userInfo.phoneNumber || 'Not set' }}</span>
+            </div>
+
+            <div class="detail-item">
+                <strong>Role:</strong>
+                <span class="role-badge">{{ userInfo.role }}</span>
+            </div>
+
+            <!-- Show button to create password if not set -->
+            <div class="detail-item" *ngIf="userInfo.noPassword">
+                <button class="btn-create-password" (click)="showPasswordForm = true">
+                    🔐 Create Password
+                </button>
+            </div>
+        </div>
+
+        <!-- Address Section -->
+        <div class="address-section">
+            <h3>Shipping Address</h3>
+            <button class="btn-address" (click)="handleAddressClick()">
+                {{ userInfo.address ? 'Edit Address' : 'Add Address' }}
+            </button>
+
+            <div class="address-display" *ngIf="userInfo.address">
+                <p>{{ userInfo.address.street }}</p>
+                <p>{{ userInfo.address.city }}, {{ userInfo.address.state }} {{ userInfo.address.zipCode }}</p>
+                <p>{{ userInfo.address.country }}</p>
+            </div>
+        </div>
+
+        <!-- Order History -->
+        <div class="orders-section">
+            <h3>Order History</h3>
+
+            <div class="no-orders" *ngIf="!userInfo.orderItemList || userInfo.orderItemList.length === 0">
+                <p>No orders yet</p>
+            </div>
+
+            <div class="orders-list" *ngIf="userInfo.orderItemList && userInfo.orderItemList.length > 0">
+                <div class="order-item" *ngFor="let order of paginatedOrders">
+                    <!-- Your existing order display code -->
+                    <p>Order #{{ order.id }}</p>
+                    <p>Status: {{ order.status }}</p>
+                    <p>Total: ${{ order.totalPrice }}</p>
+                </div>
+
+                <!-- Pagination -->
+                <app-pagination [currentPage]="currentPage" [totalPages]="totalPages"
+                    (pageChange)="onPageChange($event)"></app-pagination>
+            </div>
+        </div>
+
+    </div>
+</div>

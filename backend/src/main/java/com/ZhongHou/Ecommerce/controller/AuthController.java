@@ -1,12 +1,12 @@
 package com.ZhongHou.Ecommerce.controller;
 
 import com.ZhongHou.Ecommerce.dto.LoginRequest;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
-import com.ZhongHou.Ecommerce.entity.User;
-import com.ZhongHou.Ecommerce.security.AuthUser;
 import com.ZhongHou.Ecommerce.service.UserService;
+import com.ZhongHou.Ecommerce.service.impl.OutboundService;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
+    private final OutboundService outboundService;
 
     @PostMapping("/register")
     public ResponseEntity<Response> registerUser(@RequestBody UserDto registrationRequest){
@@ -28,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Response> loginUser(@RequestBody LoginRequest loginRequest , HttpServletResponse response){
+    public ResponseEntity<Response> loginUser(@RequestBody @Valid LoginRequest loginRequest , HttpServletResponse response){
 
         Response result  = userService.loginUser(loginRequest);
 
@@ -53,8 +54,7 @@ public class AuthController {
     }
 
     @PostMapping("/refresh")
-    ResponseEntity<Response> newAccessToken(@CookieValue(name="rt", required = false) String refreshToken,
-                                            HttpServletResponse response){
+    ResponseEntity<Response> newAccessToken(@CookieValue(name="rt", required = false) String refreshToken, HttpServletResponse response){
         //Check cookie exist?
         if (refreshToken == null || refreshToken.isBlank())
             return ResponseEntity.status(401).body(
@@ -91,4 +91,20 @@ public class AuthController {
         userService.logout(token);
 
     }
+
+    //Fe -> BE
+    @PostMapping("/outbound/authentication")
+    public Response outboundAuthenticate(@RequestParam("code") String code){
+        var res = outboundService.outboundAuthenticate(code);
+        log.info("Outbound token from google  {}", res);
+        return res;
+    }
+
+
+    //Create password for onboard user (from Google)
+    @PostMapping ("/outbound/create-password")
+    ResponseEntity<Response> createPassword(@RequestBody UserDto createPasswordRequest){
+        return ResponseEntity.ok(outboundService.createPassword(createPasswordRequest));
+    }
+
 }

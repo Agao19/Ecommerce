@@ -1,6 +1,6 @@
-package com.ZhongHou.Ecommerce.dto;
+package com.ZhongHou.Ecommerce.dto.response;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ZhongHou.Ecommerce.dto.*;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

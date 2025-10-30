@@ -1,7 +1,7 @@
 package com.ZhongHou.Ecommerce.service;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 
 public interface CategoryService {
 

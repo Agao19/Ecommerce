@@ -1,7 +1,7 @@
 package com.ZhongHou.Ecommerce.controller;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
 import com.ZhongHou.Ecommerce.enums.PaymentGateway;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

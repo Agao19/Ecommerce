@@ -1,7 +1,7 @@
 package com.ZhongHou.Ecommerce.AI;
 
 import com.ZhongHou.Ecommerce.dto.ProductDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Product;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.ProductRepository;

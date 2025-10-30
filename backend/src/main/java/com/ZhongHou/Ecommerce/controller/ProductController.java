@@ -1,7 +1,6 @@
 package com.ZhongHou.Ecommerce.controller;
 
-import com.ZhongHou.Ecommerce.dto.Response;
-import com.ZhongHou.Ecommerce.exception.InvalidCredentialsException;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,7 +27,7 @@ public class ProductController {
             @RequestParam("price") BigDecimal price
     ){
         if (categoryId ==null || image.isEmpty() || name.isEmpty() || description.isEmpty() || price ==null){
-            throw new InvalidCredentialsException("All Fields are Required");
+            throw  new RuntimeException();
         }
         return ResponseEntity.ok(productService.createProduct(categoryId,image,name,description,price));
 

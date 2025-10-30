@@ -1,15 +1,12 @@
 package com.ZhongHou.Ecommerce.AI;
 
-import com.ZhongHou.Ecommerce.dto.Response;
-import com.ZhongHou.Ecommerce.entity.Product;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/recommendations")

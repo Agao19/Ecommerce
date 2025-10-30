@@ -1,7 +1,6 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
-import com.ZhongHou.Ecommerce.dto.Payment.constant.IpnResponse;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.Payment.constant.IpnResponse;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;

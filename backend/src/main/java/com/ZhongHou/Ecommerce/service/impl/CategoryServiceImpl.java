@@ -1,17 +1,16 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Category;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.CategoryRepository;
 import com.ZhongHou.Ecommerce.service.CategoryService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable; //caching with spring cached
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -52,7 +51,8 @@ public class CategoryServiceImpl implements CategoryService {
     //@CacheEvict(value = "categories", allEntries = true)
     public Response updateCategory(Long categoryId, CategoryDto categoryRequest) {
         Category category=categoryRepository.findById(categoryId)
-        .orElseThrow(()->new NotFoundException("Category not found"));
+        .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+
         category.setName(categoryRequest.getName());
         categoryRepository.save(category);
         return Response.builder()
@@ -99,7 +99,7 @@ public class CategoryServiceImpl implements CategoryService {
     //@Cacheable(value="categories", key = "#categoryId")
     public Response getCategoryById(Long categoryId) {
         Category category=categoryRepository.findById(categoryId)
-        .orElseThrow(()->new NotFoundException("Category not found"));
+        .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
         CategoryDto categoryDto=entityDtoMapper.mapCategoryToDtoBasic(category);
 
        // simulateSlowService(); //testing cached
@@ -112,7 +112,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Response deleteCategory(Long categoryId) {
-        Category category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+        Category category=categoryRepository.findById(categoryId)
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+
         categoryRepository.delete(category);
         return Response.builder()
                 .status(200)

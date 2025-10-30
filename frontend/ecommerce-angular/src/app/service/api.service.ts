@@ -39,6 +39,8 @@ export class ApiService {
     })
   }
 
+
+
   //PRODUCTS API
   addProduct(body: any): Observable<any> {
     return this.http.post(`${ApiService.BASE_URL}/product/create`, body, {
@@ -161,9 +163,29 @@ export class ApiService {
 
   //Authentication
   logout(): void {
+    // Clear both normal and Google login tokens
     localStorage.removeItem('token');
     localStorage.removeItem('role');
+    localStorage.removeItem('google_access_token');
+    localStorage.removeItem('google_id_token');
+    localStorage.removeItem('user_info');
   }
+
+
+  //outbound user: 
+  exchangeGoogleCode(code: string): Observable<any> {
+    return this.http.post(`${ApiService.BASE_URL}/auth/outbound/authentication`, null, {
+      params: { code }  // Gửi code qua query param
+    });
+  }
+  //create outbound user
+  createPasswordForGoogleUser(password: string): Observable<any> {
+    return this.http.post(`${ApiService.BASE_URL}/auth/outbound/create-password`,
+      { password },
+      { headers: this.getHeader() }
+    );
+  }
+
 
   isAuthenticated(): boolean {
     const token = localStorage.getItem('token')
@@ -174,17 +196,6 @@ export class ApiService {
     const role = localStorage.getItem('role')
     return role === 'ADMIN';
   }
-
-
-
-  // saveToken(token: string): void{
-  //   localStorage.setItem("token", token);
-  // }
-
-  // getToken(): string | null{
-  //   const token=localStorage.getItem("token");
-  //   return token;
-  // }
 
 
 }

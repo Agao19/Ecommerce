@@ -19,6 +19,7 @@ import { EditproductComponent } from './admin/editproduct/editproduct.component'
 import { AdminorderComponent } from './admin/adminorder/adminorder.component';
 import { AdminorderdetailsComponent } from './admin/adminorderdetails/adminorderdetails.component';
 import { PaymentComponent } from './payment/payment.component';
+import { AuthenticateComponent } from './authenticate/authenticate.component';
 
 export const routes: Routes = [
     //PUBLIC ROUTES
@@ -30,6 +31,7 @@ export const routes: Routes = [
     { path: 'products/:categoryId', component: CategoryproductsComponent },
     { path: 'cart', component: CartComponent },
     { path: 'payments', component: PaymentComponent },
+    { path: 'authenticate', component: AuthenticateComponent },
 
 
     //USER ROUTES

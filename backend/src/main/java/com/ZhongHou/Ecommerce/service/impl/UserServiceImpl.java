@@ -1,12 +1,12 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.LoginRequest;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.dto.UserDto;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.UserRole;
-import com.ZhongHou.Ecommerce.exception.InvalidCredentialsException;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.UserRepository;
 import com.ZhongHou.Ecommerce.security.JwtUtils;
@@ -16,12 +16,11 @@ import com.ZhongHou.Ecommerce.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseCookie;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -32,14 +31,11 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-
     private final UserRepository userRepo;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtils jwtUtils;
     private final EntityDtoMapper entityDtoMapper;
     private final RedisRepository redisRepository;
-
-
 
     private static final boolean ROTATE_REFRESH = true;
 
@@ -76,10 +72,10 @@ public class UserServiceImpl implements UserService {
     public Response loginUser(LoginRequest loginRequest) {
 
         User user = userRepo.findByEmail(loginRequest.getEmail())
-                .orElseThrow(()-> new NotFoundException("Email not found"));
+                .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         if (!passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())){
-            throw new InvalidCredentialsException("Password does not match");
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
         String token = jwtUtils.generateToken(user);
@@ -116,25 +112,26 @@ public class UserServiceImpl implements UserService {
     public Response sendNewAccessToken(String refreshToken) {
 
         if(refreshToken == null || refreshToken.isBlank()){
-            throw new InvalidCredentialsException("Please check refresh token");
+            throw new AppException(ErrorCode.INVALID_KEY);
         }
 
         String type = jwtUtils.getType(refreshToken);
-        if (!"refresh".equals(type)) throw new InvalidCredentialsException("Wrong token type");
+        if (!"refresh".equals(type)) throw new AppException(ErrorCode.TOKEN_INVALID);
 
         Date exp = jwtUtils.getExpirationTimeFromFreshToken(refreshToken);
-        if (exp == null || exp.before(new Date())) throw new InvalidCredentialsException("Refresh token expired");
+        if (exp == null || exp.before(new Date())) throw new AppException(ErrorCode.TOKEN_EXPIRED);
 
         String jti = jwtUtils.getJtiFromRefreshToken(refreshToken);
         String key = "refresh:" + jti;
         boolean whitelisted = redisRepository.findById(key).isPresent();
+
         if (!whitelisted) {
-            throw new InvalidCredentialsException("Refresh token revoked");
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
         }
 
         String subject  = jwtUtils.getSubjectFromRefreshToken(refreshToken);
         User user = userRepo.findByEmail(subject)
-                .orElseThrow(() -> new InvalidCredentialsException("User not found"));
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
 
 
         //delete refresh_jwtID khi phat lai access token
@@ -181,7 +178,7 @@ public class UserServiceImpl implements UserService {
         String type =  jwtUtils.getType(token);
 
         if (remainingMs <= 0) {
-            // token đã hết hạn -> không cần lưu/điều xử
+            // token đã hết hạn -> không cần lưu
             log.info("Token already expired, nothing to revoke: jti={}", jwtId);
             return;
         }
@@ -195,7 +192,7 @@ public class UserServiceImpl implements UserService {
             try {
                 redisRepository.deleteById(key);
             }catch (Exception e){
-                throw new NotFoundException("Failed to delete refresh key:  " + key) ;
+                throw new AppException(ErrorCode.TOKEN_INVALID) ;
             }
             return;
         } else {
@@ -230,15 +227,17 @@ public class UserServiceImpl implements UserService {
     public User getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String  email = authentication.getName();
-        log.info("User Email is: " + email);
         return userRepo.findByEmail(email)
-                .orElseThrow(()-> new UsernameNotFoundException("User Not found"));
+                .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
     }
 
     @Override
     public Response getUserInfoAndOrderHistory() {
         User user = getLoginUser();
+
         UserDto userDto = entityDtoMapper.mapUserToDtoPlusAddressAndOrderHistory(user);
+
+        userDto.setNoPassword(!StringUtils.hasText(user.getPassword()));
 
         return Response.builder()
                 .status(200)

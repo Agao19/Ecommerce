@@ -36,7 +36,6 @@ spring:
       time-to-live: 5m #TTL
 
 
-
 secreteJwtString: zhonghou123456789zhonghou123456789
 
 #AWS connect
@@ -47,11 +46,9 @@ secreteJwtString: zhonghou123456789zhonghou123456789
 #spring.datasource.password=Trunghau123
 #spring.jpa.hibernate.ddl-auto=update
 #spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-logging:
-  level:
-    org.springframework.web.socket: DEBUG
-    org.springframework.messaging: DEBUG
-    org.apache.tomcat.websocket: DEBUG
+
+
+
 # AWS S3 Configuration
 aws:
   s3:
@@ -85,11 +82,15 @@ payment:
 #momo.notifyUrl=https://oboeru.me/api/payment/momo-notify
 
 
-
-
 #Logg
 #logging:
 #  file:
 #    name: logs/app.log
 #  level:
 #    root: INFO
+
+#logging:
+#  level:
+#    org.springframework.web.socket: DEBUG
+#    org.springframework.messaging: DEBUG
+#    org.apache.tomcat.websocket: DEBUG

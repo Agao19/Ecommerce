@@ -1,7 +1,7 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.AddressDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Address;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.repository.AddressRepository;

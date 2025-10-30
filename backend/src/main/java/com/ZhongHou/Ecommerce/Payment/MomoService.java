@@ -1,11 +1,12 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
+package com.ZhongHou.Ecommerce.Payment;
 
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.Payment;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.PaymentGateway;
 import com.ZhongHou.Ecommerce.enums.PaymentStatus;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
 import com.ZhongHou.Ecommerce.repository.PaymentRepository;
 import com.ZhongHou.Ecommerce.repository.UserRepository;
@@ -13,10 +14,8 @@ import com.ZhongHou.Ecommerce.service.impl.NotiService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -68,15 +67,14 @@ public class MomoService {
         log.info("INSIDE MOMO createPaymentIntent");
 
         Order order =orderRepository.findByOrderReference(orderReference)
-                .orElseThrow(()-> new NotFoundException("Item not found"));
+                .orElseThrow(()-> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         if (order.getPaymentStatus() == PaymentStatus.COMPLETED) {
-            throw new IllegalStateException("Order already paid");
+            throw new AppException(ErrorCode.SERVICE_COMPLETED);
         }
 
-
         User user = userRepository.findById(userId)
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(()->new AppException(ErrorCode.USER_NOT_EXISTED));
 
 
         // Số tiền thực từ order
@@ -150,29 +148,6 @@ public class MomoService {
                 "transId", transId != null ? transId : ""
         );
 
-//        HttpURLConnection conn = (HttpURLConnection) new URL(endpoint).openConnection();
-//        conn.setDoOutput(true);
-//        conn.setRequestMethod("POST");
-//        conn.setRequestProperty("Content-Type", "application/json");
-//
-//        String jsonStr = mapper.writeValueAsString(payload);
-//
-//        try (OutputStream os = conn.getOutputStream()) {
-//            os.write(jsonStr.getBytes(StandardCharsets.UTF_8));
-//        }
-//
-//        String response = new BufferedReader(new InputStreamReader(conn.getInputStream()))
-//                .lines().collect(Collectors.joining("\n"));
-//
-//
-//        JsonNode jsonResponse = mapper.readTree(response);
-//
-//        return Map.of(
-//                "payUrl", jsonResponse.get("payUrl").asText(),
-//                "orderId", orderId,
-//                "transId", jsonResponse.has("transId") ? jsonResponse.get("transId").asText() : "",
-//                "requestId", requestId
-//        );
     }
 
     private JsonNode doPost(String url, ObjectNode body) throws Exception {

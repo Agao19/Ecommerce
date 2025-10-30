@@ -1,5 +1,5 @@
-package com.ZhongHou.Ecommerce.dto.Payment;
-import com.ZhongHou.Ecommerce.dto.Payment.constant.IpnResponse;
+package com.ZhongHou.Ecommerce.Payment;
+import com.ZhongHou.Ecommerce.Payment.constant.IpnResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

@@ -1,4 +1,4 @@
-package com.ZhongHou.Ecommerce.dto.Payment.configWS;
+package com.ZhongHou.Ecommerce.Payment.configWS;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;

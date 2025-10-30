@@ -1,4 +1,4 @@
-package com.ZhongHou.Ecommerce.dto.Payment.constant;
+package com.ZhongHou.Ecommerce.Payment.constant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

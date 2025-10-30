@@ -1,4 +1,4 @@
-package com.ZhongHou.Ecommerce.dto.Payment.constant;
+package com.ZhongHou.Ecommerce.Payment.constant;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
