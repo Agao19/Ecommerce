@@ -25,7 +25,15 @@ spring:
           options:
             model: gemini-2.0-flash
 
-#Mail Sender
+#Chat memory - Mysql
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: never  # Tắt auto-init vì Spring AI không có MySQL schema
+
+
+  #Mail Sender
   mail:
       host: smtp.gmail.com
       port: 587

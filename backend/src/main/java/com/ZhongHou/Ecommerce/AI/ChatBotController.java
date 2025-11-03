@@ -32,5 +32,8 @@ public class ChatBotController {
         return chatBotService.chatWithImages(file, message);
     }
 
-
+    @PostMapping("/chat-memory")
+    public String chatMemory(@RequestBody ChatRequest request) {
+        return chatBotService.chatWithMemory(request);
+    }
 }
