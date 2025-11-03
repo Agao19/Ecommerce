@@ -14,6 +14,17 @@ spring:
     hibernate:
         ddl-auto: update
 
+#Spring AI - GEMINI
+# In application.yml
+  ai:
+    open-ai:
+        api-key: ${GEMINI_KEY}
+        chat:
+          base-url: https://generativelanguage.googleapis.com
+          completions-path: /v1beta/openai/chat/completions
+          options:
+            model: gemini-2.0-flash
+
 #Mail Sender
   mail:
       host: smtp.gmail.com
@@ -37,17 +48,6 @@ spring:
 
 
 secreteJwtString: zhonghou123456789zhonghou123456789
-
-#AWS connect
-#server.port=8080
-#server.address=0.0.0.0
-#spring.datasource.url=jdbc:mysql://ecommerce1.ch6w0cw4asti.ap-southeast-1.rds.amazonaws.com:3306/ecomdb
-#spring.datasource.username=admin
-#spring.datasource.password=Trunghau123
-#spring.jpa.hibernate.ddl-auto=update
-#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-
-
 
 # AWS S3 Configuration
 aws:
@@ -73,15 +73,6 @@ payment:
           timeout: 15 # in minutes
 
 
-#MOMO PAYMENT
-#momo.partnerCode=MOMO
-#momo.accessKey=${ACCESS_KEY_MOMO}
-#momo.secretKey=${SECRET_KEY_MOMO}
-#momo.endpoint=https://test-payment.momo.vn/v2/gateway/api/create
-#momo.returnUrl=https://oboeru.me/payment/return
-#momo.notifyUrl=https://oboeru.me/api/payment/momo-notify
-
-
 #Logg
 #logging:
 #  file:
@@ -94,3 +85,22 @@ payment:
 #    org.springframework.web.socket: DEBUG
 #    org.springframework.messaging: DEBUG
 #    org.apache.tomcat.websocket: DEBUG
+
+
+
+#MOMO PAYMENT
+#momo.partnerCode=MOMO
+#momo.accessKey=${ACCESS_KEY_MOMO}
+#momo.secretKey=${SECRET_KEY_MOMO}
+#momo.endpoint=https://test-payment.momo.vn/v2/gateway/api/create
+#momo.returnUrl=https://oboeru.me/payment/return
+#momo.notifyUrl=https://oboeru.me/api/payment/momo-notify
+
+#AWS connect
+#server.port=8080
+#server.address=0.0.0.0
+#spring.datasource.url=jdbc:mysql://ecommerce1.ch6w0cw4asti.ap-southeast-1.rds.amazonaws.com:3306/ecomdb
+#spring.datasource.username=admin
+#spring.datasource.password=Trunghau123
+#spring.jpa.hibernate.ddl-auto=update
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
