@@ -106,6 +106,7 @@ public class ProductServiceImpl implements ProductService {
     public Response getProductById(Long productId) {
        Product product=productRepository.findById(productId)
                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+
         ProductDto productDto=entityDtoMapper.mapProductToDtoBasic(product);
 
         return  Response.builder()

@@ -1,6 +1,8 @@
 server:
   port: 8080
-
+app:
+  rag:
+    enabled: false
 spring:
   application:
       name: Ecommerce
@@ -17,25 +19,17 @@ spring:
 #Spring AI - GEMINI
 # In application.yml
   ai:
-    open-ai:
+    openai:
         api-key: ${GEMINI_KEY}
+        base-url: https://generativelanguage.googleapis.com
         chat:
-          base-url: https://generativelanguage.googleapis.com
           completions-path: /v1beta/openai/chat/completions
           options:
             model: gemini-2.0-flash
         embedding:
+          embeddings-path: /v1beta/openai/embeddings
           options:
-            model: text-embedding-001
-    vectorstore:
-      redis:
-          host: localhost
-          port: 6380  # (redis-stack)
-          index: rag:index 
-          prefix: rag:docs #Raw documents (content + metadata)
-          initialize-schema: true
-          distance-metric: COSINE
-
+            model: text-embedding-004
 
 #Chat memory - Mysql
     chat:

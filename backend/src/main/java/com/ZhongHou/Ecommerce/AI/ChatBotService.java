@@ -5,7 +5,7 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
-import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
+//import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
 import org.springframework.ai.chat.messages.SystemMessage;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.prompt.ChatOptions;
@@ -20,15 +20,16 @@ import reactor.core.publisher.Flux;
 public class ChatBotService {
     private final ChatClient chatClient;
 
-    private final JdbcChatMemoryRepository jdbcChatMemoryRepository;
+    //private final JdbcChatMemoryRepository jdbcChatMemoryRepository;
 
-    public ChatBotService(ChatClient.Builder builder,
-                          JdbcChatMemoryRepository jdbcChatMemoryRepository) {
+    public ChatBotService(ChatClient.Builder builder
+                          //JdbcChatMemoryRepository jdbcChatMemoryRepository
+    ) {
 
-        this.jdbcChatMemoryRepository = jdbcChatMemoryRepository;
+       // this.jdbcChatMemoryRepository = jdbcChatMemoryRepository;
 
         ChatMemory chatMemory = MessageWindowChatMemory.builder()
-                .chatMemoryRepository(jdbcChatMemoryRepository)
+                //.chatMemoryRepository(jdbcChatMemoryRepository)
                 .maxMessages(30)
                 .build();
 
