@@ -24,6 +24,18 @@ spring:
           completions-path: /v1beta/openai/chat/completions
           options:
             model: gemini-2.0-flash
+        embedding:
+          options:
+            model: text-embedding-001
+    vectorstore:
+      redis:
+          host: localhost
+          port: 6380  # (redis-stack)
+          index: rag:index 
+          prefix: rag:docs #Raw documents (content + metadata)
+          initialize-schema: true
+          distance-metric: COSINE
+
 
 #Chat memory - Mysql
     chat:
