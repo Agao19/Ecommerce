@@ -1,8 +1,8 @@
 package com.ZhongHou.Ecommerce.controller;
 
-import com.ZhongHou.Ecommerce.dto.OrderRequest;
 import com.ZhongHou.Ecommerce.Payment.PaymentRequest;
 import com.ZhongHou.Ecommerce.Payment.VNPayService;
+import com.ZhongHou.Ecommerce.dto.OrderRequest;
 import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.enums.OrderStatus;
@@ -42,14 +42,14 @@ public class OrderItemController {
     public ResponseEntity<Response> placeOrder(@RequestBody OrderRequest orderRequest,
                                                HttpServletRequest httpServletRequest) {
 
-        Order savedOrder =  orderItemService.placeOrder(orderRequest);
+        Order savedOrder = orderItemService.placeOrder(orderRequest);
 
         var ipAddress = httpServletRequest.getRemoteAddr();
-        var orderReference =savedOrder.getOrderReference();
+        var orderReference = savedOrder.getOrderReference();
         var amount = savedOrder.getTotalPrice();
         var requestId = UUID.randomUUID().toString();
 
-        log.info("IP ADDRESS {}",ipAddress);
+        log.info("IP ADDRESS {}", ipAddress);
 
 
         PaymentRequest vnpayRequest = new PaymentRequest();
@@ -66,31 +66,27 @@ public class OrderItemController {
 
     @PutMapping("/update-item-status/{orderItemId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status)
-    {
+    public ResponseEntity<Response> updateOrderItemStatus(@PathVariable Long orderItemId, @RequestParam String status) {
         return ResponseEntity.ok(orderItemService.updateOrderItemStatus(orderItemId, status));
     }
-
 
 
     @GetMapping("/filter")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> filterOrderItem(
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime startDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)LocalDateTime endDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate,
             @RequestParam(required = false) String status,
             @RequestParam(required = false) Long itemId,
-            @RequestParam(defaultValue = "0") int  page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "100") int size
-            ){
-        Pageable pageable= PageRequest.of(page,size, Sort.by(Sort.Direction.DESC,"id"));
-        OrderStatus orderStatus=status  != null ? OrderStatus.valueOf(status.toUpperCase()) :null;
+    ) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
+        OrderStatus orderStatus = status != null ? OrderStatus.valueOf(status.toUpperCase()) : null;
 
         return ResponseEntity.ok(orderItemService
-                                .filterOrderItems(orderStatus,startDate,endDate,itemId,pageable));
+                .filterOrderItems(orderStatus, startDate, endDate, itemId, pageable));
     }
-
-
 
 
 }
