@@ -1,6 +1,5 @@
 .env
 *.out
 /product-images/
-/logs/
-*/.idea/
-*/.mvn/wrapper 
+/db/*
+*.md

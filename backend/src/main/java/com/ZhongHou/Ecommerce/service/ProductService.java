@@ -1,6 +1,6 @@
 package com.ZhongHou.Ecommerce.service;
 
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -20,4 +20,7 @@ public interface ProductService {
     Response getProductsByCategory(Long categoryId);
 
     Response searchProduct(String searchValue);
+
+    
+
 }

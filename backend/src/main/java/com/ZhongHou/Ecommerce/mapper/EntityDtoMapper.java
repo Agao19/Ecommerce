@@ -4,6 +4,7 @@ import com.ZhongHou.Ecommerce.dto.*;
 import com.ZhongHou.Ecommerce.entity.*;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
@@ -11,7 +12,6 @@ public class EntityDtoMapper {
 
 
     //user entity to user DTO
-
     public UserDto mapUserToDtoBasic(User user){
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
@@ -40,6 +40,17 @@ public class EntityDtoMapper {
         CategoryDto categoryDto = new CategoryDto();
         categoryDto.setId(category.getId());
         categoryDto.setName(category.getName());
+
+//        //Kiem tra category có productList-> vi productList là LAZY nên phải có transcational cho khi gọi method này.
+//        if (category.getProductList() != null){
+//            List<ProductDto>  productDtoList =  category.getProductList().stream()
+//                    .map(product -> this.mapProductToDtoBasic(product))
+//                    .collect(Collectors.toList());
+//
+//            categoryDto.setProductList(productDtoList);
+//        }
+
+
         return categoryDto;
     }
 
@@ -71,7 +82,6 @@ public class EntityDtoMapper {
         System.out.println("mapUserToDtoPlusAddress is called");
         UserDto userDto = mapUserToDtoBasic(user);
         if (user.getAddress() != null){
-
             AddressDto addressDto = mapAddressToDtoBasic(user.getAddress());
             userDto.setAddress(addressDto);
 

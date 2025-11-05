@@ -1,7 +1,6 @@
 package com.ZhongHou.Ecommerce.controller;
 
-import com.ZhongHou.Ecommerce.dto.Response;
-import com.ZhongHou.Ecommerce.exception.InvalidCredentialsException;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +20,14 @@ public class ProductController {
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> createProduct(
-            @RequestParam Long categoryId,
-            @RequestParam MultipartFile image,
-            @RequestParam String name,
-            @RequestParam String description,
-            @RequestParam BigDecimal price
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("image") MultipartFile image,
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("price") BigDecimal price
     ){
         if (categoryId ==null || image.isEmpty() || name.isEmpty() || description.isEmpty() || price ==null){
-            throw new InvalidCredentialsException("All Fields are Required");
+            throw  new RuntimeException();
         }
         return ResponseEntity.ok(productService.createProduct(categoryId,image,name,description,price));
 
@@ -37,12 +36,12 @@ public class ProductController {
     @PutMapping("/update")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<Response> updateProduct(
-            @RequestParam Long productId,
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) MultipartFile image,
-            @RequestParam(required = false) String name,
-            @RequestParam(required = false) String description,
-            @RequestParam(required = false) BigDecimal price
+            @RequestParam (name = "productId")Long productId,
+            @RequestParam(name = "categoryId",required = false) Long categoryId,
+            @RequestParam(name = "image",required = false) MultipartFile image,
+            @RequestParam(name = "name",required = false) String name,
+            @RequestParam(name = "description",required = false) String description,
+            @RequestParam(name = "price",required = false) BigDecimal price
     ){
 
         return ResponseEntity.ok(productService.updateProduct(productId,categoryId,image,name,description,price));
@@ -70,7 +69,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId));
     }
 
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<Response> searchProduct(@RequestParam String searchValue){
         return ResponseEntity.ok(productService.searchProduct(searchValue));
     }

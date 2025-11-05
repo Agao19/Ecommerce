@@ -1,5 +1,7 @@
 package com.ZhongHou.Ecommerce.entity;
 
+import com.ZhongHou.Ecommerce.enums.PaymentGateway;
+import com.ZhongHou.Ecommerce.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -15,13 +17,26 @@ public class Payment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private BigDecimal amount;
-    private String method;
-    private String status;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
 
-    @Column(name = "created_at")
-    private final LocalDateTime createdAt=LocalDateTime.now();
+    private LocalDateTime paymentDate;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentGateway paymentGateWay;
+
+    //ID chung
+    private String transactionId;
+
+    private String orderReference;
+    private String failureReason;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private User user;
 }

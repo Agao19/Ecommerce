@@ -2,10 +2,13 @@ package com.ZhongHou.Ecommerce.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "addresses")
 public class Address {
@@ -27,8 +30,6 @@ public class Address {
 
     @Column(name = "created_at")
     private final LocalDateTime createdAt= LocalDateTime.now();
-
-
 
 
 }

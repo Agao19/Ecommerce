@@ -14,4 +14,6 @@ public class OrderRequest {
     private BigDecimal totalPrice;
     private List<OrderItemRequest> items;
     private Payment paymentInfo;
+
+    private String ipAddress;
 }

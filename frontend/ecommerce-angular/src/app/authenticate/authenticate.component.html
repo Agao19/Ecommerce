@@ -1,0 +1,7 @@
+<div class="auth-container">
+    <div class="auth-card" [ngClass]="{'error': isError}">
+        <div class="spinner" *ngIf="!isError"></div>
+        <div class="icon" *ngIf="isError">❌</div>
+        <h2>{{ message }}</h2>
+    </div>
+</div>

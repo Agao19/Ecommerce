@@ -1,10 +1,11 @@
 package com.ZhongHou.Ecommerce.service.impl;
 
 import com.ZhongHou.Ecommerce.dto.ProductDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Category;
 import com.ZhongHou.Ecommerce.entity.Product;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
 import com.ZhongHou.Ecommerce.repository.CategoryRepository;
 import com.ZhongHou.Ecommerce.repository.ProductRepository;
@@ -31,15 +32,21 @@ public class ProductServiceImpl implements ProductService {
     private final AwsS3Service aws;
 
     @Override
-    public Response createProduct(Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
-        Category category= categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category not found"));
+    public Response createProduct(Long categoryId, 
+                        MultipartFile image, 
+                        String name, 
+                        String description, BigDecimal price) {
+        Category category= categoryRepository.findById(categoryId)
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
-        String productImageUrl=aws.saveImageToS3(image);
+        String productImageUrl=aws.saveImageToLocal(image);
+        //String productImageUrlLocal=aws.saveImageToLocal(image);
 
         Product product = new Product();
         product.setCategory(category);
         product.setName(name);
         product.setDescription(description);
+        //product.setImageUrl(productImageUrlLocal);
         product.setImageUrl(productImageUrl);
         product.setPrice(price);
 
@@ -53,17 +60,20 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response updateProduct(Long productId, Long categoryId, MultipartFile image, String name, String description, BigDecimal price) {
-        Product product=productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product Not found"));
+        Product product=productRepository.findById(productId)
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         Category category=null;
         String productImageUrl=null;
 
         if (category != null) {
-            category=categoryRepository.findById(categoryId).orElseThrow(()->new NotFoundException("Category Not Found"));
+            category=categoryRepository.findById(categoryId)
+            .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
         }
 
         if (image != null && !image.isEmpty()){
-            productImageUrl=aws.saveImageToS3(image);
+            //productImageUrl=aws.saveImageToS3(image);
+            productImageUrl=aws.saveImageToLocal(image);
         }
 
         if (category != null) product.setCategory(category);
@@ -82,7 +92,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response deleteProduct(Long productId) {
-        Product product = productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product Not Found"));
+        Product product = productRepository.findById(productId)
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
         productRepository.delete(product);
 
         return Response.builder()
@@ -93,7 +104,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response getProductById(Long productId) {
-       Product product=productRepository.findById(productId).orElseThrow(()->new NotFoundException("Product not found"));
+       Product product=productRepository.findById(productId)
+               .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
+
         ProductDto productDto=entityDtoMapper.mapProductToDtoBasic(product);
 
         return  Response.builder()
@@ -117,9 +130,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Response getProductsByCategory(Long categoryId) {
+
         List<Product> products = productRepository.findByCategoryId(categoryId);
         if (products.isEmpty()){
-            throw new NotFoundException("No products found for this category");
+            throw new AppException(ErrorCode.PRODUCT_NOT_EXISTED);
         }
         List<ProductDto> productDtoList=products.stream()
                 .map(entityDtoMapper::mapProductToDtoBasic)
@@ -136,7 +150,7 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products=productRepository.findByNameContainingOrDescriptionContaining(searchValue,searchValue);
 
         if (products.isEmpty()){
-            throw new NotFoundException("No products found");
+            throw new AppException(ErrorCode.PRODUCT_NOT_EXISTED);
         }
             List<ProductDto> productDtoList= products.stream()
                     .map(entityDtoMapper::mapProductToDtoBasic)
@@ -147,4 +161,8 @@ public class ProductServiceImpl implements ProductService {
                     .productList(productDtoList)
                     .build();
     }
+
+   
+
+
 }

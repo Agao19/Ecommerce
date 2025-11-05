@@ -1,11 +1,13 @@
 package com.ZhongHou.Ecommerce.security;
 
+import com.ZhongHou.Ecommerce.service.RedisRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,24 +26,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final JwtUtils jwtUtils;
     private final CustomUserDetailsService customUserDetailsService;
 
-
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
 
-        String token = getTokenFromRequest(request);
+        //pass jwtFilter khi cap accessToken moi
+        String uri =request.getRequestURI();
 
+        if (uri.startsWith("/auth/refresh") || uri.startsWith("/ws-payment")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String token = getAccessTokenFromRequest(request);
         if (token !=null) {
             String username=jwtUtils.getUsernameFromToken(token);
 
             UserDetails userDetails=customUserDetailsService.loadUserByUsername(username);
 
-            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails)){
+            if (StringUtils.hasText(username)&&jwtUtils.isTokenValid(token,userDetails)) {
                 log.info("VALID JWT FOR {}", username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
-                );
+                        userDetails, null, userDetails.getAuthorities());
+
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -51,7 +60,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     }
 
     //
-    private String getTokenFromRequest(HttpServletRequest request){
+    private String getAccessTokenFromRequest(HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (StringUtils.hasText(token) && StringUtils.startsWithIgnoreCase(token,"Bearer ")){
             return token.substring(7);

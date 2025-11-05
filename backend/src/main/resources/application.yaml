@@ -1,0 +1,120 @@
+server:
+  port: 8080
+app:
+  rag:
+    enabled: false
+spring:
+  application:
+      name: Ecommerce
+#Connect DB
+  datasource:
+    url: jdbc:mysql://localhost:3306/ecommerce
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+        ddl-auto: update
+
+#Spring AI - GEMINI
+# In application.yml
+  ai:
+    openai:
+        api-key: ${GEMINI_KEY}
+        base-url: https://generativelanguage.googleapis.com
+        chat:
+          completions-path: /v1beta/openai/chat/completions
+          options:
+            model: gemini-2.0-flash
+        embedding:
+          embeddings-path: /v1beta/openai/embeddings
+          options:
+            model: text-embedding-004
+
+#Chat memory - Mysql
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: never  # Tắt auto-init vì Spring AI không có MySQL schema
+
+
+  #Mail Sender
+  mail:
+      host: smtp.gmail.com
+      port: 587
+      username: hauvt108.usec@gmail.com
+      password: sfsu iqrc avjf lvlj
+      protocol: smtp
+
+      properties:
+                mail:
+                    smtp:
+                        auth: true
+                        starttls:
+                            enable: true
+                            required: true
+#Caching storage
+  cache:
+    type: redis
+    redis:
+      time-to-live: 5m #TTL
+
+
+secreteJwtString: zhonghou123456789zhonghou123456789
+
+# AWS S3 Configuration
+aws:
+  s3:
+    access: ${AWS_ACCESS_KEY}
+    secret: ${AWS_SECRET_KEY}
+
+#STRIPE PAYMENT
+stripe:
+  api:
+    public:
+          key: ${STRIPE_PUBLIC_KEY}
+    secret:
+          key: ${STRIPE_PRIVATE_KEY}
+
+## VNPAY
+payment:
+        vnpay:
+          tmn-code:  58X4B4HP
+          secret-key: ${VNPAY_SECRET_KEY}
+          init-payment-url: https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
+          return-url: https://exertive-barbar-interpenetratively.ngrok-free.dev/payments/vnpay_return
+          timeout: 15 # in minutes
+
+
+#Logg
+#logging:
+#  file:
+#    name: logs/app.log
+#  level:
+#    root: INFO
+
+#logging:
+#  level:
+#    org.springframework.web.socket: DEBUG
+#    org.springframework.messaging: DEBUG
+#    org.apache.tomcat.websocket: DEBUG
+
+
+
+#MOMO PAYMENT
+#momo.partnerCode=MOMO
+#momo.accessKey=${ACCESS_KEY_MOMO}
+#momo.secretKey=${SECRET_KEY_MOMO}
+#momo.endpoint=https://test-payment.momo.vn/v2/gateway/api/create
+#momo.returnUrl=https://oboeru.me/payment/return
+#momo.notifyUrl=https://oboeru.me/api/payment/momo-notify
+
+#AWS connect
+#server.port=8080
+#server.address=0.0.0.0
+#spring.datasource.url=jdbc:mysql://ecommerce1.ch6w0cw4asti.ap-southeast-1.rds.amazonaws.com:3306/ecomdb
+#spring.datasource.username=admin
+#spring.datasource.password=Trunghau123
+#spring.jpa.hibernate.ddl-auto=update
+#spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver

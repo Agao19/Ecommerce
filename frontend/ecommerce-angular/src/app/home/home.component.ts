@@ -25,10 +25,12 @@ export class HomeComponent  implements OnInit{
     this.route.queryParamMap.subscribe((params: ParamMap)=>{
       const searchItem=params.get('search');
       const pageParam=params.get('page');
+      console.log(searchItem);
       this.currentPage = pageParam ? +pageParam : 1
       this.fetchProducts(searchItem);
     })
   }
+
   fetchProducts(searchItem: string | null): void{
     const productObservable = searchItem ? this.apiService.searchForProduct(searchItem)
     :this.apiService.getAllProducts();
@@ -49,7 +51,7 @@ export class HomeComponent  implements OnInit{
   }
 
   handleProductResponse(products: []): void{
-    this.totalPages = Math.ceil(products.length/this.itemsPerPage);
+    this.totalPages = Math.ceil(products.length / this.itemsPerPage);
     this.products=products.slice(
       (this.currentPage - 1) * this.itemsPerPage,
       this.currentPage * this.itemsPerPage

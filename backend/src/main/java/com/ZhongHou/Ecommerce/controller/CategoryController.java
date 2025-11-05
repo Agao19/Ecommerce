@@ -1,7 +1,7 @@
 package com.ZhongHou.Ecommerce.controller;
 
 import com.ZhongHou.Ecommerce.dto.CategoryDto;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,18 +31,18 @@ public class CategoryController {
 
     @PutMapping("/update/{categoryId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> updateCategory(@PathVariable Long categoryId, @RequestBody CategoryDto categoryDto){
+    public ResponseEntity<Response> updateCategory(@PathVariable("categoryId") Long categoryId, @RequestBody CategoryDto categoryDto){
         return ResponseEntity.ok(categoryService.updateCategory(categoryId,categoryDto));
     }
 
     @DeleteMapping("/delete/{categoryId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<Response> deleteCategory(@PathVariable Long categoryId){
+    public ResponseEntity<Response> deleteCategory(@PathVariable("categoryId") Long categoryId){
         return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
 
     @GetMapping("/get-category-by-id/{categoryId}")
-    public ResponseEntity<Response> getCategoryById(@PathVariable Long categoryId){
+    public ResponseEntity<Response> getCategoryById(@PathVariable("categoryId") Long categoryId){
         return ResponseEntity.ok(categoryService.getCategoryById(categoryId));
     }
 

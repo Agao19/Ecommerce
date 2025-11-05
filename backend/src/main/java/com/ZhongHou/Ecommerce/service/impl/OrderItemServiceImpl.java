@@ -1,18 +1,21 @@
 package com.ZhongHou.Ecommerce.service.impl;
-
 import com.ZhongHou.Ecommerce.dto.OrderItemDto;
 import com.ZhongHou.Ecommerce.dto.OrderRequest;
-import com.ZhongHou.Ecommerce.dto.Response;
+import com.ZhongHou.Ecommerce.dto.response.Response;
 import com.ZhongHou.Ecommerce.entity.Order;
 import com.ZhongHou.Ecommerce.entity.OrderItem;
 import com.ZhongHou.Ecommerce.entity.Product;
 import com.ZhongHou.Ecommerce.entity.User;
 import com.ZhongHou.Ecommerce.enums.OrderStatus;
-import com.ZhongHou.Ecommerce.exception.NotFoundException;
+import com.ZhongHou.Ecommerce.enums.PaymentStatus;
+import com.ZhongHou.Ecommerce.exception.AppException;
+import com.ZhongHou.Ecommerce.exception.ErrorCode;
 import com.ZhongHou.Ecommerce.mapper.EntityDtoMapper;
+import com.ZhongHou.Ecommerce.repository.NotificationRepository;
 import com.ZhongHou.Ecommerce.repository.OrderItemRepository;
 import com.ZhongHou.Ecommerce.repository.OrderRepository;
 import com.ZhongHou.Ecommerce.repository.ProductRepository;
+import com.ZhongHou.Ecommerce.service.OrderGenerator;
 import com.ZhongHou.Ecommerce.service.OrderItemService;
 import com.ZhongHou.Ecommerce.service.UserService;
 import com.ZhongHou.Ecommerce.specification.OrderItemSpecifications;
@@ -40,8 +43,13 @@ public class OrderItemServiceImpl implements OrderItemService {
     private final UserService userService;
     private final EntityDtoMapper entityDtoMapper;
 
+    //
+    private final OrderGenerator orderGenerator;
+    private final NotiService notiService;
+    private final NotificationRepository notificationRepository;
+
     @Override
-    public Response placeOrder(OrderRequest orderRequest) {
+    public Order placeOrder(OrderRequest orderRequest) {
 
         User user = userService.getLoginUser();
 
@@ -50,7 +58,7 @@ public class OrderItemServiceImpl implements OrderItemService {
                 .stream()
                 .map(orderItemRequest -> {
                     Product product=productRepository.findById(orderItemRequest.getProductId())
-                            .orElseThrow(() -> new NotFoundException("Product not found"));
+                            .orElseThrow(() -> new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
                     OrderItem orderItem=new OrderItem();
                     orderItem.setProduct(product);
@@ -61,30 +69,48 @@ public class OrderItemServiceImpl implements OrderItemService {
                     return orderItem;
                 }).collect(Collectors.toList());
 
-        //calculate the total price
+        //Tinh tong tien
         BigDecimal totalPrice= orderRequest.getTotalPrice() != null && orderRequest.getTotalPrice().compareTo(BigDecimal.ZERO) >0
                 ? orderRequest.getTotalPrice()
-                :orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+                : orderItems.stream().map(OrderItem::getPrice).reduce(BigDecimal.ZERO,BigDecimal::add);
+
+
+        String orderReference = orderGenerator.generateOrderReference(); //tao ma check order
 
         //create order entity
         Order order=new Order();
         order.setOrderItemList(orderItems);
         order.setTotalPrice(totalPrice);
+        order.setPaymentStatus(PaymentStatus.PENDING);
+
+        order.setOrderReference(orderReference); //Dua vao de gui mail
 
         //set the order reference in each orderitem
         orderItems.forEach(orderItem -> orderItem.setOrder(order));
-        orderRepository.save(order);
+         orderRepository.save(order);
 
-        return Response.builder()
-                .status(200)
-                .message("Order was successfully placed")
-                .build();
+//
+//        //Xac nhan link thanh toan
+//        String paymentLink = "http://localhost:4200/payment/"+orderReference+ "/" +totalPrice;
+//
+//        //SEND mail xac nhan
+//        NotificationDTO notificationDTO = NotificationDTO.builder()
+//                .recipient(user.getEmail())
+//                .subject("ORDER SUCCESSFULLY")
+//                .body(String.format("Order successfully, \n Please process with payment , \n" +
+//                        "link: "+paymentLink))
+//                .orderReference(orderReference)
+//                .build();
+//
+//        notiService.sendEmail(notificationDTO);
+
+        return order;
     }
 
     @Override
     public Response updateOrderItemStatus(Long orderItemId, String status) {
         OrderItem orderItem=orderItemRepository.findById(orderItemId)
-                .orElseThrow(()->new NotFoundException("Order item not found"));
+                .orElseThrow(()->new AppException(ErrorCode.PRODUCT_NOT_EXISTED));
 
         orderItem.setStatus(OrderStatus.valueOf(status.toUpperCase()));
         orderItemRepository.save(orderItem);
@@ -96,15 +122,21 @@ public class OrderItemServiceImpl implements OrderItemService {
     }
 
     @Override
-    public Response filterOrderItems(OrderStatus status, LocalDateTime startDate, LocalDateTime endDate, Long itemId, Pageable pageable) {
-        Specification<OrderItem> spec= Specification.where(OrderItemSpecifications.hasStatus(status))
+    public Response filterOrderItems(OrderStatus status, 
+                                LocalDateTime startDate, 
+                                LocalDateTime endDate, 
+                                Long itemId, 
+                                Pageable pageable) {
+        
+        Specification<OrderItem> spec= Specification
+                .where(OrderItemSpecifications.hasStatus(status))
                 .and(OrderItemSpecifications.createdBetween(startDate, endDate))
                 .and(OrderItemSpecifications.hasItemId(itemId));
 
         Page<OrderItem> orderItemPage=orderItemRepository.findAll(spec,pageable);
-
+                                                                
         if (orderItemPage.isEmpty()){
-            throw new NotFoundException("No order found");
+            throw new AppException(ErrorCode.PRODUCT_NOT_EXISTED);
         }
         List<OrderItemDto> orderItemDtos=orderItemPage.getContent().stream()
                 .map(entityDtoMapper::mapOrderItemToDtoPlusProductAndUser)
