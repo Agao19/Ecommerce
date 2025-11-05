@@ -4,7 +4,7 @@
 /backend/src/main/aws.env
 /backend/logs/
 /backend/nohup.out
-/.idea/
+.idea/
 /.mvn/
 *.swp
 
