@@ -12,7 +12,6 @@ public class EntityDtoMapper {
 
 
     //user entity to user DTO
-
     public UserDto mapUserToDtoBasic(User user){
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());

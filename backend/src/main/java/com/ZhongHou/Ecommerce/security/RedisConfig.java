@@ -17,6 +17,7 @@ public class RedisConfig {
         return new LettuceConnectionFactory("localhost", 6379);
     }
 
+
     //@Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return (builder) -> builder

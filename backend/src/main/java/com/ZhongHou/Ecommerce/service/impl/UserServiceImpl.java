@@ -226,6 +226,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getLoginUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
         String  email = authentication.getName();
         return userRepo.findByEmail(email)
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));

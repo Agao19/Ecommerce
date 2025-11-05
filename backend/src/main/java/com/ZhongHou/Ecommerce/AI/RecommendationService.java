@@ -40,7 +40,7 @@ public class RecommendationService {
                 return null;
             }
 
-            // (2) Parse chuỗi JSON (ví dụ: "[5, 2, 7]") thành List<Long>
+            // (2) đọc chuỗi JSON (ví dụ: "[5, 2, 7]") thành List<Long>
             List<Long> productIds = objectMapper.readValue(jsonProductIds, new TypeReference<List<Long>>() {});
 
             if (productIds.isEmpty()) {
